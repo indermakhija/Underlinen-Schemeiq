@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0071)file:///C:/Users/Inderpal%20S%20Makhija/Downloads/remixed-9ffd0184.html -->
+<!-- saved from url=(0085)file:///D:/ULFH/Reporting%20data/DASHboard%20data/Scheme%20and%20incentive/index.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SchemeIQ — Underlinen Incentive Calculator</title>
-<link href="./SchemeIQ — Underlinen Incentive Calculator_files/css2" rel="stylesheet">
-<script src="./SchemeIQ — Underlinen Incentive Calculator_files/xlsx.full.min.js.download"></script>
+<link href="./index_files/css2" rel="stylesheet">
+<script src="./index_files/xlsx.full.min.js.download"></script>
 <style>
 :root{
   --bg:#F4F6FB;--surface:#fff;--border:#E2E8F4;
@@ -205,7 +205,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
       <button class="num-btn" onclick="pinKey(&#39;0&#39;)">0</button>
       <button class="num-btn del" onclick="pinDel()">⌫</button>
     </div>
-    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-error" id="pin-error">Incorrect PIN. Try again.</div>
   </div>
 </div>
 
@@ -217,13 +217,13 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
     <span>SchemeIQ · Incentive &amp; Scheme Calculator</span>
     <div style="display:flex;gap:7px;align-items:center">
       <span class="hdr-badge" id="share-btn" onclick="copyShareLink()">🔗 Share</span>
-      <span class="hdr-badge" id="admin-toggle-btn" onclick="toggleAdmin()">🔓 Admin</span>
+      <span class="hdr-badge" id="admin-toggle-btn" onclick="toggleAdmin()">⚙ Admin</span>
     </div>
   </div>
 </div>
 
 <!-- ADMIN BAR (visible when logged in) -->
-<div class="adminbar visible" id="adminbar">
+<div class="adminbar" id="adminbar">
   <span class="adminbar-label">🔓 Admin</span>
   <span class="adminbar-info">Edit mode active — configure targets &amp; slabs</span>
   <button class="admin-action ghost" onclick="showTab(&#39;admin-settings&#39;,document.querySelector(&#39;.tab[data-tab=admin-settings]&#39;))">Settings</button>
@@ -231,20 +231,20 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
 </div>
 
 <!-- UPLOAD BAR -->
-<div class="upbar admin-visible" id="upbar">
+<div class="upbar" id="upbar">
   <button class="up-btn" onclick="document.getElementById(&#39;file-input&#39;).click()">📄 Upload Team Excel</button>
   <div class="up-status ok" id="up-status">✓ team(42) | distributor(75) | retailer(6737)</div>
   <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleUpload(this)">
 </div>
 
 <!-- TABS -->
-<div class="tabs" id="tabs" style="top: 136px;">
+<div class="tabs" id="tabs" style="top: 113px;">
   <button class="tab active" data-tab="distrib" onclick="showTab(&#39;distrib&#39;,this)">Distributor</button>
   <button class="tab" data-tab="retailer" onclick="showTab(&#39;retailer&#39;,this)">Retailer</button>
   <button class="tab" data-tab="team" onclick="showTab(&#39;team&#39;,this)">Team / Rep</button>
   <button class="tab" data-tab="leadership" onclick="showTab(&#39;leadership&#39;,this)">Sup &amp; Mgr</button>
   <button class="tab" data-tab="trip" onclick="showTab(&#39;trip&#39;,this)">Trip</button>
-  <button class="tab admin-only-tab" data-tab="admin-settings" onclick="showTab(&#39;admin-settings&#39;,this)" style="display: flex; color: var(--purple);">⚙ Settings</button>
+  <button class="tab admin-only-tab" data-tab="admin-settings" onclick="showTab(&#39;admin-settings&#39;,this)" style="display: none; color: var(--purple);">⚙ Settings</button>
 </div>
 
 <!-- ═══ DISTRIBUTOR ═══ -->
@@ -260,7 +260,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
       <button class="seg-btn active" onclick="setDPeriod(&#39;monthly&#39;,this)">Monthly Primary</button>
       <button class="seg-btn" onclick="setDPeriod(&#39;quarterly&#39;,this)">Quarterly Secondary</button>
     </div>
-    <div class="field"><label>Target NSV (Rs.) <span class="lock-lbl" style="display: none;">🔒</span></label><input type="number" id="d-target" value="1800000" oninput="calcDistrib()"></div>
+    <div class="field"><label>Target NSV (Rs.) <span class="lock-lbl" style="">🔒</span></label><input type="number" id="d-target" value="1800000" oninput="calcDistrib()" readonly=""></div>
     <div class="field"><label>Till Date NSV Achieved (Rs.)</label><input type="number" id="d-actual" value="1900000" oninput="calcDistrib()"></div>
     <div class="meter-wrap">
       <div class="meter-row"><span class="meter-lbl">Achievement</span><span class="meter-pct" id="d-pct-lbl">105.6%</span></div>
@@ -277,7 +277,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
       <div class="mc"><div class="ml">Slab</div><div class="mv" id="d-slab" style="font-size:12px">100–109%</div></div>
       <div class="mc"><div class="ml">Period</div><div class="mv" id="d-period">Monthly</div></div>
     </div>
-    <div class="chart-wrap"><div class="chart-title">Target vs Achieved</div><canvas class="mychart" id="chart-distrib" height="240" width="1806" style="width: 1204px; height: 160px;"></canvas></div>
+    <div class="chart-wrap"><div class="chart-title">Target vs Achieved</div><canvas class="mychart" id="chart-distrib" height="810" width="1806" style="width: 1204px; height: 540px;"></canvas></div>
   </div>
   <div class="card">
     <div class="card-title">Slab Reference</div>
@@ -315,7 +315,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
     </div>
     <div id="r-trip-badge" style="margin-top:9px;display:none"><span class="badge amber">✈️ Trip Eligible</span><span class="badge green">Highest Slab</span></div>
     <div id="r-next" style="margin-top:9px;font-size:12px;font-weight:700;color:var(--sub)">Rs.25,000 more → next slab (14% total)</div>
-    <div class="chart-wrap"><div class="chart-title">Purchase vs Slab Thresholds</div><canvas class="mychart" id="chart-retailer" height="300" width="450" style="width: 300px; height: 200px;"></canvas></div>
+    <div class="chart-wrap"><div class="chart-title">Purchase vs Slab Thresholds</div><canvas class="mychart" id="chart-retailer" height="675" width="450" style="width: 300px; height: 450px;"></canvas></div>
   </div>
   <div class="card">
     <div class="card-title">Slab Reference</div>
@@ -335,7 +335,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
   </div>
   <div class="card">
     <div class="card-title">Volume Incentive <span class="pill pb">Waterfall Slabs</span></div>
-    <div class="field"><label>Target Volume (units) <span class="lock-lbl" style="display: none;">🔒</span></label><input type="number" id="t-target" value="5000" oninput="calcTeam()"></div>
+    <div class="field"><label>Target Volume (units) <span class="lock-lbl" style="">🔒</span></label><input type="number" id="t-target" value="5000" oninput="calcTeam()" readonly=""></div>
     <div class="field"><label>Till Date Volume Sold (units)</label><input type="number" id="t-actual" value="4600" oninput="calcTeam()"></div>
     <div class="meter-wrap">
       <div class="meter-row"><span class="meter-lbl">Achievement</span><span class="meter-pct" id="t-pct-lbl">92.0%</span></div>
@@ -354,7 +354,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
     </div>
     <div class="dstrip" id="t-detail">Rs.3 × 4,600 = Rs.13,800
 + TOTAL = Rs.13,800</div>
-    <div class="chart-wrap"><div class="chart-title">Incentive Band Breakdown</div><canvas class="mychart" id="chart-team" height="210" width="450" style="width: 300px; height: 140px;"></canvas></div>
+    <div class="chart-wrap"><div class="chart-title">Incentive Band Breakdown</div><canvas class="mychart" id="chart-team" height="472" width="450" style="width: 300px; height: 315px;"></canvas></div>
   </div>
   <div class="card">
     <div class="card-title">Key Outlet Enrollment <span class="pill pa">Rs.500 / outlet</span></div>
@@ -391,7 +391,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
     <div class="chain-row"><div class="chain-icon ci-rep">👤</div><div class="chain-info"><div class="chain-role">Reps — Average</div><div class="chain-pay" id="chain-rep">Rs. 8,750</div><div class="chain-basis">Average of all rep payouts above</div></div></div>
     <div class="chain-row"><div class="chain-icon ci-sup">🤝</div><div class="chain-info"><div class="chain-role">Supervisor Payout</div><div class="chain-pay" id="chain-sup">Rs. 17,500</div><div class="chain-basis">Avg(Rep payouts) × 2</div></div></div>
     <div class="chain-row"><div class="chain-icon ci-mgr">👔</div><div class="chain-info"><div class="chain-role">Manager Payout</div><div class="chain-pay" id="chain-mgr">Rs. 23,000</div><div class="chain-basis" id="chain-mgr-basis">Avg(Supervisor payouts) × 2</div></div></div>
-    <div class="chart-wrap"><div class="chart-title">Payout Chain</div><canvas class="mychart" id="chart-leadership" height="315" width="450" style="width: 300px; height: 210px;"></canvas></div>
+    <div class="chart-wrap"><div class="chart-title">Payout Chain</div><canvas class="mychart" id="chart-leadership" height="708" width="450" style="width: 300px; height: 472px;"></canvas></div>
   </div>
 </div>
 
@@ -403,7 +403,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
     <div class="field"><label>Annual NSV (Rs.)</label><input type="number" id="tr-annual" value="1500000" oninput="calcTrip()"></div>
     <div class="trip-card turkey"><div class="trip-emoji">🇹🇷</div><div class="trip-name">TURKEY TRIP</div><div class="trip-req" id="turkey-req">6-Month NSV Target: Rs.9,00,000 · 4N/5D</div><div class="trip-bar"><div class="trip-bar-fill" id="tr-turkey-bar" style="width: 72.2222%;"></div></div><div class="trip-pct" id="tr-turkey-pct">72.2% achieved</div><div id="tr-turkey-status" style="margin-top:7px"><span class="badge red">Rs.2,50,000 more needed</span></div></div>
     <div class="trip-card swiss"><div class="trip-emoji">🇨🇭</div><div class="trip-name">SWITZERLAND TRIP</div><div class="trip-req" id="swiss-req">Annual NSV Target: Rs.18,00,000 · 5N/6D</div><div class="trip-bar"><div class="trip-bar-fill" id="tr-swiss-bar" style="width: 83.3333%;"></div></div><div class="trip-pct" id="tr-swiss-pct">83.3% achieved</div><div id="tr-swiss-status" style="margin-top:7px"><span class="badge red">Rs.3,00,000 more needed</span></div></div>
-    <div class="chart-wrap"><div class="chart-title">Trip Achievement vs Target</div><canvas class="mychart" id="chart-trip" height="240" width="450" style="width: 300px; height: 160px;"></canvas></div>
+    <div class="chart-wrap"><div class="chart-title">Trip Achievement vs Target</div><canvas class="mychart" id="chart-trip" height="540" width="450" style="width: 300px; height: 360px;"></canvas></div>
   </div>
   <div class="card">
     <div class="card-title">Distributor Trip Scheme <span class="pill pb">Monthly NSV</span></div>
@@ -452,7 +452,7 @@ canvas.mychart{display:block;width:100%;border-radius:8px}
       <div class="admin-field"><label>New PIN (4 digits)</label><input type="number" id="cfg-new-pin" placeholder="e.g. 1234" maxlength="4"></div>
       <div class="admin-field"><label>Confirm New PIN</label><input type="number" id="cfg-confirm-pin" placeholder="repeat PIN" maxlength="4"></div>
     </div>
-    <div id="pin-change-msg" style="margin-top:8px;font-size:12px;font-weight:700;min-height:18px"></div>
+    <div id="pin-change-msg" style="margin-top: 8px; font-size: 12px; font-weight: 700; min-height: 18px; color: var(--green);">PIN updated.</div>
   </div>
   <div class="admin-panel">
     <div class="admin-panel-title">⚙️ Publish Updated Template</div>
