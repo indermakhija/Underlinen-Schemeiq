@@ -433,6 +433,7 @@ var soloRule = false;
 var dPeriod = 'monthly';
 var pinBuf = '';
 var excelData = { distrib: [], retailer: [], team: [] };
+// EMBEDDED_DATA_PLACEHOLDER
 
 // ── FORMAT ──
 var INF = new Intl.NumberFormat('en-IN');
@@ -857,8 +858,28 @@ function saveSettings() {
 
 function downloadFile() {
   var html = document.documentElement.outerHTML;
+
+  // 1. Bake CFG
   var cfgStr = 'var CFG = ' + JSON.stringify(CFG, null, 2) + ';';
   html = html.replace(/var CFG = \{[\s\S]*?\n\};/, cfgStr);
+
+  // 2. Bake excelData — replace placeholder line AND repopulate selectors on load
+  var dataStr = 'var excelData = ' + JSON.stringify(excelData) + ';\n// EMBEDDED_DATA_PLACEHOLDER';
+  html = html.replace(/var excelData = \{[\s\S]*?\n\/\/ EMBEDDED_DATA_PLACEHOLDER/, dataStr);
+
+  // 3. Inject a script that repopulates selectors from embedded data on load
+  var repopScript =
+    '<script id="repop-script">' +
+    'window.addEventListener("load",function(){' +
+    '  if(excelData.distrib&&excelData.distrib.length){fillSel("sel-d",excelData.distrib);}' +
+    '  if(excelData.retailer&&excelData.retailer.length){fillSel("sel-r",excelData.retailer);}' +
+    '  if(excelData.team&&excelData.team.length){fillSel("sel-t",excelData.team);}' +
+    '});' +
+    '<\/script>';
+  // Remove any previously injected repop script before adding fresh one
+  html = html.replace(/<script id="repop-script">[\s\S]*?<\/script>/, '');
+  html = html.replace('</body>', repopScript + '</body>');
+
   var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
