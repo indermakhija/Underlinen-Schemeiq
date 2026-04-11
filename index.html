@@ -381,7 +381,6 @@ var CFG = {
 
 // ── EMBEDDED DATA (baked in on save) ──
 var EMBEDDED = {"distrib":[],"retailer":[],"team":[]};
-
 // ── RUNTIME STATE ──
 var isAdmin = false, soloRule = false, dPeriod = 'monthly', pinBuf = '';
 var excelData = { distrib: [], retailer: [], team: [] };
@@ -934,11 +933,6 @@ window.addEventListener('load', function() {
   calcD(); calcR(); calcT(); calcOutlet(); calcL(); calcTrip(); calcDTrip();
   if (CFG.lastUpdated) document.getElementById('vstamp').textContent = 'SchemeIQ · Underlinen · Updated ' + CFG.lastUpdated;
 });
-</script>
-
-<!-- STATIC TEMPLATE: used by saveSettings() to build a clean download. Never rendered. -->
-<script type="text/plain" id="static-template"><!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>SchemeIQ — Underlinen</title><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"><\/script><style>INHERIT_STYLES<\/style></head><body>INHERIT_BODY<script>/*INJECT_CFG*/var EMBEDDED=/*INJECT_DATA*/;INHERIT_SCRIPT<\/script></body></html>
 </script>
 
 </body>
