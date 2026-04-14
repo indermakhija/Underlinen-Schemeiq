@@ -2,938 +2,666 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SchemeIQ — Underlinen</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Friends Connection — Scheme Calculator</title>
 <style>
-:root{
-  --bg:#FFF8F0;--surface:#fff;--border:#FFE4C8;--text:#1E1035;--sub:#7B6F8A;--dim:#B0A5BF;
-  --red:#FF4D6D;--red-s:#FFF0F3;--red-m:#FFCCD5;
-  --blue:#6C63FF;--blue-s:#F0EEFF;--blue-m:#C9C5FF;
-  --green:#00C896;--green-s:#E6FFF8;--green-m:#99F0DC;
-  --amber:#FF9F1C;--amber-s:#FFF4E0;
-  --purple:#D63AF9;--purple-s:#FAF0FF;
-  --r:16px;--rs:10px
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;font-size:15px;min-height:100vh;padding-bottom:60px}
-.hdr{background:linear-gradient(135deg,#FF4D6D,#FF9F1C);padding:16px 16px 12px;position:sticky;top:0;z-index:100}
-.hdr-eye{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px}
-.hdr-title{font-size:20px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.dot{width:5px;height:5px;background:rgba(255,255,255,.45);border-radius:50%;flex-shrink:0;display:inline-block}
-.hdr-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
-.hdr-btns{display:flex;gap:6px}
-.hdr-badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.18);color:#fff;cursor:pointer;border:none;font-family:inherit}
-.adminbar{background:#1A1F36;padding:10px 14px;display:none;position:sticky;top:66px;z-index:99;align-items:center;gap:10px;flex-wrap:wrap}
-.adminbar.show{display:flex}
-.abar-lbl{font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
-.abar-info{font-size:12px;font-weight:700;color:#fff;flex:1}
-.abtn{font-size:11px;font-weight:800;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-family:inherit}
-.abtn-red{background:var(--red);color:#fff}.abtn-ghost{background:rgba(255,255,255,.12);color:#fff}
-.upbar{background:#fff;border-bottom:2px solid var(--border);padding:9px 14px;display:none;align-items:center;gap:9px;flex-wrap:wrap;position:sticky;top:66px;z-index:98}
-.upbar.show{display:flex}
-.up-btn{background:var(--blue);color:#fff;font-weight:800;font-size:12px;padding:7px 13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit}
-.up-st{font-size:12px;font-weight:700;color:var(--sub);flex:1}
-.up-st.ok{color:var(--green)}.up-st.err{color:var(--red)}
-.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:66px;z-index:97;transition:top .2s}
-.tabs.shift1{top:113px}.tabs.shift2{top:136px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,sans-serif;background:#E8F4FD;color:#0A1628;min-height:100vh;padding-bottom:40px}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#0D2B5E 0%,#0F4C3A 60%,#1A6B4A 100%);padding:14px 16px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(13,43,94,.3)}
+.hdr-row{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(255,255,255,.25)}
+.logo-fc{font-size:15px;font-weight:900;color:#fff;line-height:1}
+.logo-txt{font-size:6px;font-weight:800;color:rgba(255,255,255,.8);letter-spacing:.3px;text-align:center;line-height:1.3}
+.hdr-info{flex:1}
+.hdr-brand{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.hdr-title{font-size:18px;font-weight:900;color:#fff}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,.6);font-weight:600}
+
+/* TABS */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #C5DCF0;overflow-x:auto;scrollbar-width:none;position:sticky;top:74px;z-index:40;box-shadow:0 1px 4px rgba(13,43,94,.08)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;padding:11px 14px;font-size:12px;font-weight:800;color:var(--dim);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-family:inherit}
-.tab.active{color:var(--red);border-bottom-color:var(--red)}
-.sec{display:none;padding:13px}.sec.active{display:block}
-.picker{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:13px}
-.picker-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-bottom:7px}
-.psel{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:inherit;font-size:15px;font-weight:700;padding:9px 12px;outline:none;-webkit-appearance:none;cursor:pointer}
-.psel:focus{border-color:var(--blue);background:#fff}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.chip{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
-.cb{background:var(--blue-s);color:var(--blue)}.cg{background:var(--green-s);color:var(--green)}
-.ca{background:var(--amber-s);color:var(--amber)}.cr{background:var(--red-s);color:var(--red)}
-.card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:13px}
-.ctitle{font-size:13px;font-weight:900;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.pill{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:20px}
-.pr{background:var(--red-s);color:var(--red)}.pb{background:var(--blue-s);color:var(--blue)}
-.pg{background:var(--green-s);color:var(--green)}.pa{background:var(--amber-s);color:var(--amber)}
-.pp{background:var(--purple-s);color:var(--purple)}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:10px;font-weight:800;color:var(--sub);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
-.field input,.field select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:inherit;font-size:17px;font-weight:700;padding:10px 13px;outline:none;-webkit-appearance:none}
-.field input:focus{border-color:var(--blue);background:#fff}
-.field input.af{border-color:var(--green);background:var(--green-s)}
-.field input[readonly]{opacity:.55;cursor:not-allowed}
-.rbox{border-radius:var(--rs);padding:16px;margin-top:12px}
-.rbox.red{background:var(--red-s);border:1.5px solid var(--red-m)}
-.rbox.blue{background:var(--blue-s);border:1.5px solid var(--blue-m)}
-.rbox.green{background:var(--green-s);border:1.5px solid var(--green-m)}
-.rlbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-bottom:3px}
-.rval{font-size:36px;font-weight:900;line-height:1;margin-bottom:4px}
-.rbox.red .rval{color:var(--red)}.rbox.blue .rval{color:var(--blue)}.rbox.green .rval{color:var(--green)}
-.rnote{font-size:11px;font-weight:600;color:var(--sub);line-height:1.5}
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
-.mc{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);padding:11px}
-.mc .ml{font-size:10px;font-weight:800;color:var(--dim);text-transform:uppercase;margin-bottom:2px}
-.mc .mv{font-size:16px;font-weight:900;color:var(--text)}
-.mv.red{color:var(--red)}.mv.blue{color:var(--blue)}.mv.green{color:var(--green)}.mv.amber{color:var(--amber)}
-.mwrap{margin:12px 0 3px}
-.mrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.mlbl{font-size:12px;font-weight:700;color:var(--sub)}
-.mpct{font-size:14px;font-weight:800;color:var(--text)}
-.mbar{height:10px;background:var(--border);border-radius:6px;overflow:hidden}
-.mfill{height:100%;border-radius:6px;background:linear-gradient(90deg,#FF4D6D,#FF9F1C);transition:width .35s}
-.mfill.over{background:linear-gradient(90deg,#00C896,#6C63FF)}
-.seg{display:flex;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);padding:3px;margin-bottom:13px;gap:3px}
-.sbtn{flex:1;text-align:center;padding:8px 5px;font-size:12px;font-weight:800;border-radius:8px;color:var(--sub);background:none;border:none;cursor:pointer;font-family:inherit}
-.sbtn.active{background:#fff;color:var(--red)}
-.stbl{width:100%;border-collapse:collapse}
-.stbl th{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--dim);text-align:left;padding:7px 9px;border-bottom:2px solid var(--border)}
-.stbl td{font-size:13px;font-weight:600;padding:9px;border-bottom:1px solid var(--bg)}
+.tab{flex:none;padding:10px 16px;font-size:12px;font-weight:800;color:#7A9BB5;border:none;background:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-family:inherit}
+.tab.on{color:#0D2B5E;border-bottom-color:#0D2B5E}
+
+/* SECTIONS */
+.sec{display:none;padding:13px}.sec.on{display:block}
+
+/* CARD */
+.card{background:#fff;border:1.5px solid #C5DCF0;border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:0 1px 6px rgba(13,43,94,.06)}
+.card-title{font-size:13px;font-weight:900;color:#0A1628;margin-bottom:13px;display:flex;align-items:center;gap:7px}
+.badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px}
+.b-red{background:#FEE8EC;color:#C0392B}
+.b-blue{background:#DAEAF8;color:#0D2B5E}
+.b-green{background:#D4F0E4;color:#0F4C3A}
+.b-amber{background:#FEF3DC;color:#B7650A}
+
+/* QUARTER SELECTOR */
+.qrow{display:flex;gap:6px;margin-bottom:13px}
+.qbtn{flex:1;padding:8px;font-family:inherit;font-size:13px;font-weight:800;border:1.5px solid #C5DCF0;border-radius:10px;background:#EAF3FB;color:#7A9BB5;cursor:pointer}
+.qbtn.on{background:linear-gradient(135deg,#0D2B5E,#0F4C3A);color:#fff;border-color:transparent}
+
+/* MONTH INPUTS */
+.month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.m-box{background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;padding:10px}
+.m-box:focus-within{border-color:#0D2B5E;background:#DAEAF8}
+.m-lbl{font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.m-inp{width:100%;background:transparent;border:none;outline:none;font-family:inherit;font-size:16px;font-weight:800;color:#0A1628;padding:0}
+.m-inp::placeholder{color:#A8C4D8}
+.m-slab{font-size:10px;font-weight:700;margin-top:4px}
+
+/* SUMMARY ROW */
+.sum-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sum-box{border-radius:10px;padding:10px;text-align:center}
+.sum-box .sl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.sum-box .sv{font-size:15px;font-weight:900}
+.sb-q{background:#DAEAF8;border:1px solid #A8C4D8}
+.sb-q .sl{color:#0D2B5E}.sb-q .sv{color:#0D2B5E}
+.sb-m{background:#D4F0E4;border:1px solid #8FCFB0}
+.sb-m .sl{color:#0F4C3A}.sb-m .sv{color:#0F4C3A}
+.sb-t{background:linear-gradient(135deg,#0D2B5E,#0F4C3A)}
+.sb-t .sl{color:rgba(255,255,255,.65)}.sb-t .sv{color:#fff;font-size:18px}
+
+/* RECEIPT */
+.receipt{border:1.5px solid #C5DCF0;border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 6px rgba(13,43,94,.06)}
+.rh{display:grid;grid-template-columns:1fr 60px 90px;background:linear-gradient(135deg,#0D2B5E,#0F4C3A);padding:8px 12px;gap:6px}
+.rh span{font-size:10px;font-weight:800;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.5px}
+.rh span:last-child{text-align:right}
+.rr{display:grid;grid-template-columns:1fr 60px 90px;padding:9px 12px;gap:6px;border-top:1px solid #EAF3FB;align-items:center;background:#fff}
+.rr.zero{opacity:.35}
+.rr.sub{background:#D4F0E4;border-top:1.5px solid #8FCFB0}
+.rr.qrow-r{background:#DAEAF8;border-top:1.5px solid #A8C4D8}
+.rr.tot{background:linear-gradient(135deg,#0D2B5E,#0F4C3A);border-top:none}
+.rr .rl{font-size:12px;font-weight:700;color:#0A1628}
+.rr .rl small{display:block;font-size:10px;font-weight:600;color:#5A82A0;margin-top:1px}
+.rr.tot .rl{color:#fff;font-weight:900}
+.rr .rate{font-size:11px;font-weight:800;padding:2px 7px;border-radius:20px;text-align:center}
+.rate-g{background:#D4F0E4;color:#0F4C3A}
+.rate-b{background:#DAEAF8;color:#0D2B5E}
+.rate-d{background:#EAF3FB;color:#7A9BB5}
+.rr .amt{font-size:13px;font-weight:900;text-align:right;color:#0A1628}
+.rr.sub .amt{color:#0F4C3A}
+.rr.qrow-r .amt{color:#0D2B5E}
+.rr.tot .amt{color:#fff;font-size:16px}
+
+/* PROGRESS */
+.prog-wrap{margin:4px 0 10px}
+.prog-lbl-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-lbl{font-size:11px;font-weight:700;color:#5A82A0}
+.prog-pct{font-size:12px;font-weight:800;color:#0A1628}
+.prog-bar{height:9px;background:#C5DCF0;border-radius:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:5px;transition:width .35s}
+.pf-red{background:linear-gradient(90deg,#0D2B5E,#1565C0)}
+.pf-green{background:linear-gradient(90deg,#0F4C3A,#1A8A5A)}
+
+/* NUDGE */
+.nudge{background:#DAEAF8;border:1.5px solid #A8C4D8;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:700;color:#0D2B5E;line-height:1.6;margin-top:10px}
+.nudge strong{color:#0F4C3A}
+
+/* SLAB TABLE */
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl th{background:linear-gradient(135deg,#0D2B5E,#0F4C3A);color:rgba(255,255,255,.75);font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;text-align:left}
+.stbl td{padding:9px 10px;border-bottom:1px solid #EAF3FB;font-weight:600;color:#0A1628}
 .stbl tr:last-child td{border-bottom:none}
-.stbl tr.hl td{background:var(--red-s)}.stbl tr.hl td:first-child{border-left:3px solid var(--red)}
-.mono{font-weight:800;font-size:13px}
-.cwrap{margin-top:16px;border-top:1.5px solid var(--border);padding-top:14px}
-.ctlbl{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
-canvas{display:block;width:100%;border-radius:8px}
-.chain-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--bg)}
-.chain-row:last-child{border-bottom:none}
-.cicon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ci-r{background:var(--red-s)}.ci-s{background:var(--blue-s)}.ci-m{background:var(--green-s)}
-.cinfo{flex:1}.crole{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--dim)}
-.cpay{font-size:20px;font-weight:900}.cbasis{font-size:10px;font-weight:600;color:var(--dim);margin-top:1px}
-.dstrip{background:var(--bg);border-radius:var(--rs);border:1.5px solid var(--border);padding:11px 13px;margin-top:11px;font-size:12px;font-weight:700;color:var(--sub);line-height:2;white-space:pre-line}
-.tcard{border-radius:var(--rs);padding:15px;margin-bottom:11px;position:relative;overflow:hidden}
-.tcard.turkey{background:linear-gradient(135deg,#FFFBF0,#FFF3D4);border:1.5px solid #FDE68A}
-.tcard.swiss{background:linear-gradient(135deg,#F0F4FF,#DCE9FF);border:1.5px solid var(--blue-m)}
-.tname{font-size:17px;font-weight:900;margin-bottom:2px}
-.tcard.turkey .tname{color:#92400E}.tcard.swiss .tname{color:var(--blue)}
-.treq{font-size:11px;font-weight:600;color:var(--sub);margin-bottom:9px}
-.tbar{height:8px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-bottom:5px}
-.tbar-fill{height:100%;border-radius:4px;transition:width .4s}
-.tcard.turkey .tbar-fill{background:linear-gradient(90deg,#FF9F1C,#FFD166)}
-.tcard.swiss .tbar-fill{background:linear-gradient(90deg,#6C63FF,#A78BFF)}
-.tpct{font-size:11px;font-weight:700;color:var(--sub)}
-.temoji{position:absolute;top:11px;right:13px;font-size:30px;opacity:.22}
-.irow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg);font-size:13px}
-.irow:last-child{border-bottom:none}
-.ik{color:var(--sub);font-weight:600;font-size:12px}.iv{font-weight:800}
-.badge{display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:800;margin-right:5px;margin-top:5px}
-.bdr{background:var(--red-s);color:var(--red)}.bdg{background:var(--green-s);color:var(--green)}
-.bdb{background:var(--blue-s);color:var(--blue)}.bda{background:var(--amber-s);color:var(--amber)}
-.divider{height:1px;background:var(--border);margin:13px 0}
-.shdr{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:9px;margin-top:3px}
-.apanel{background:#fff;border:2px solid #1A1F36;border-radius:var(--r);padding:18px;margin-bottom:13px}
-.aptitle{font-size:14px;font-weight:900;color:#1A1F36;margin-bottom:14px}
-.agrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.afield label{font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;margin-bottom:4px;display:block}
-.afield input{width:100%;background:var(--bg);border:1.5px solid #1A1F36;border-radius:var(--rs);color:var(--text);font-family:inherit;font-size:15px;font-weight:700;padding:9px 12px;outline:none}
-.asave{width:100%;margin-top:14px;background:#1A1F36;color:#fff;font-family:inherit;font-weight:800;font-size:14px;padding:13px;border:none;border-radius:var(--rs);cursor:pointer}
-.anote{font-size:11px;color:var(--sub);font-weight:600;margin-top:10px;padding:10px;background:var(--amber-s);border-radius:8px;line-height:1.6}
-.modal-bg{position:fixed;inset:0;background:rgba(26,31,54,.6);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-bg.hidden{display:none}
-.modal{background:#fff;border-radius:var(--r);padding:28px 24px;width:90%;max-width:340px}
-.modal-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:6px}
-.modal-sub{font-size:13px;font-weight:600;color:var(--sub);margin-bottom:20px;line-height:1.5}
-.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
-.pin-dot{width:16px;height:16px;border-radius:50%;background:var(--border)}
-.pin-dot.filled{background:var(--red)}
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.nbtn{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;font-size:22px;font-weight:900;color:var(--text);padding:16px;cursor:pointer;text-align:center;font-family:inherit}
-.nbtn:active{background:var(--red-s);border-color:var(--red);color:var(--red)}
-.nbtn.del{font-size:16px;font-weight:800}.nbtn.cancel{background:none;color:var(--sub);font-size:13px;font-weight:800}
-.pin-err{text-align:center;font-size:12px;font-weight:800;color:var(--red);margin-top:10px;min-height:18px}
-.toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A1F36;color:#fff;font-weight:800;font-size:13px;padding:12px 20px;border-radius:30px;z-index:999;white-space:nowrap;font-family:inherit}
-.vstamp{text-align:center;font-size:10px;font-weight:700;color:var(--dim);padding:20px 0 10px}
-.lock-ico{font-size:11px;opacity:.45;margin-left:4px}
-.clr-btn{font-size:10px;font-weight:800;background:var(--red-s);color:var(--red);border:none;border-radius:6px;padding:2px 8px;cursor:pointer;font-family:inherit;margin-left:8px}
+.stbl tr.hl td{background:#D4F0E4;font-weight:800}
+.stbl tr.hl td:first-child{border-left:3px solid #0F4C3A}
+
+/* TRIP CARDS */
+.trip-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.trip-card{border-radius:12px;padding:14px;border:1.5px solid}
+.tc-t{background:linear-gradient(135deg,#FEF8EC,#FEF0D0);border-color:#F5D78A}
+.tc-s{background:linear-gradient(135deg,#EAF3FB,#D4E8F8);border-color:#A8C4D8}
+.trip-flag{font-size:26px;display:block;margin-bottom:5px}
+.trip-name{font-size:12px;font-weight:900;margin-bottom:2px}
+.tc-t .trip-name{color:#7A4A00}.tc-s .trip-name{color:#0D2B5E}
+.trip-nights{font-size:10px;font-weight:700;color:#5A82A0;margin-bottom:8px}
+.trip-tgt-lbl{font-size:10px;font-weight:700;color:#5A82A0}
+.trip-tgt-val{font-size:13px;font-weight:900;color:#0A1628;margin-bottom:7px}
+.trip-bar{height:6px;background:rgba(0,0,0,.08);border-radius:3px;overflow:hidden;margin-bottom:3px}
+.trip-fill{height:100%;border-radius:3px;transition:width .4s}
+.tc-t .trip-fill{background:linear-gradient(90deg,#D4840A,#F5B942)}
+.tc-s .trip-fill{background:linear-gradient(90deg,#0D2B5E,#1565C0)}
+.trip-pct{font-size:10px;font-weight:700;color:#5A82A0}
+.trip-ok{font-size:11px;font-weight:800;color:#0F4C3A;margin-top:4px}
+
+/* FIELD */
+.field{margin-bottom:11px}
+.field label{display:block;font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.field input{width:100%;background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;color:#0A1628;font-family:inherit;font-size:17px;font-weight:700;padding:10px 13px;outline:none;-webkit-appearance:none}
+.field input:focus{border-color:#0D2B5E;background:#fff}
+
+/* INFO BOX */
+.info-box{background:#DAEAF8;border:1.5px solid #A8C4D8;border-radius:10px;padding:10px 13px;font-size:11px;font-weight:700;color:#0D2B5E;line-height:1.7;margin-bottom:12px}
 </style>
 </head>
 <body>
-<div class="toast" id="toast">✅ Link copied!</div>
-<div class="modal-bg hidden" id="pin-modal">
-  <div class="modal">
-    <div class="modal-title">Admin Access</div>
-    <div class="modal-sub">Enter your 4-digit PIN to unlock edit mode.</div>
-    <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
-    <div class="numpad">
-      <button class="nbtn" onclick="pinKey('1')">1</button><button class="nbtn" onclick="pinKey('2')">2</button><button class="nbtn" onclick="pinKey('3')">3</button>
-      <button class="nbtn" onclick="pinKey('4')">4</button><button class="nbtn" onclick="pinKey('5')">5</button><button class="nbtn" onclick="pinKey('6')">6</button>
-      <button class="nbtn" onclick="pinKey('7')">7</button><button class="nbtn" onclick="pinKey('8')">8</button><button class="nbtn" onclick="pinKey('9')">9</button>
-      <button class="nbtn cancel" onclick="closePin()">Cancel</button><button class="nbtn" onclick="pinKey('0')">0</button><button class="nbtn del" onclick="pinDel()">⌫</button>
-    </div>
-    <div class="pin-err" id="pin-err"></div>
-  </div>
-</div>
+
 <div class="hdr">
-  <div class="hdr-eye">Underlinen · FY 2025–26</div>
-  <div class="hdr-title">FCUK <span class="dot"></span> French Connection <span class="dot"></span> PUMA</div>
-  <div class="hdr-sub">
-    <span>SchemeIQ · Incentive Calculator</span>
-    <div class="hdr-btns">
-      <button class="hdr-badge" onclick="copyLink()">🔗 Share</button>
-      <button class="hdr-badge" id="admin-btn" onclick="toggleAdmin()">⚙ Admin</button>
+  <div class="hdr-row">
+    <div class="logo">
+      <div class="logo-fc">FC</div>
+      <div class="logo-txt">FRIENDS<br>CONNECTION</div>
     </div>
-  </div>
-</div>
-<div class="adminbar" id="adminbar">
-  <span class="abar-lbl">🔓 Admin</span>
-  <span class="abar-info">Edit mode active</span>
-  <button class="abtn abtn-ghost" onclick="goTab('admin-settings')">Settings</button>
-  <button class="abtn abtn-red" onclick="logoutAdmin()">Lock</button>
-</div>
-<div class="upbar" id="upbar">
-  <button class="up-btn" onclick="document.getElementById('fi').click()">📄 Upload Excel</button>
-  <div class="up-st" id="up-st">Upload to populate name selectors</div>
-  <input type="file" id="fi" accept=".xlsx,.xls" style="display:none" onchange="handleUpload(this)">
-</div>
-<div class="tabs shift1" id="tabs">
-  <button class="tab active" onclick="goTab('distrib',this)">Distributor</button>
-  <button class="tab" onclick="goTab('retailer',this)">Retailer</button>
-  <button class="tab" onclick="goTab('team',this)">Team / Rep</button>
-  <button class="tab" onclick="goTab('leadership',this)">Sup &amp; Mgr</button>
-  <button class="tab" onclick="goTab('trip',this)">Trip</button>
-  <button class="tab" id="admin-tab" onclick="goTab('admin-settings',this)" style="display:none;color:var(--purple)">⚙ Settings</button>
-</div>
-
-<!-- DISTRIBUTOR -->
-<div class="sec active" id="sec-distrib">
-  <div class="picker"><div class="picker-lbl">👤 Distributor</div><select class="psel" id="sel-d" onchange="applyD()"><option value="">— Upload Excel to select —</option></select><div class="chips" id="chips-d"></div></div>
-  <div class="card">
-    <div class="ctitle">Achievement Incentive <span class="pill pr">NSV Based</span></div>
-    <div class="seg"><button class="sbtn active" onclick="setDP('monthly',this)">Monthly Primary</button><button class="sbtn" onclick="setDP('quarterly',this)">Quarterly Secondary</button></div>
-    <div class="field"><label>Target NSV (Rs.) <span class="lock-ico" id="d-lock">🔒</span></label><input type="number" id="d-target" value="1800000" oninput="calcD()" readonly></div>
-    <div class="field"><label>Till Date NSV Achieved (Rs.)</label><input type="number" id="d-actual" value="0" oninput="calcD()"></div>
-    <div class="mwrap"><div class="mrow"><span class="mlbl">Achievement</span><span class="mpct" id="d-pct">--</span></div><div class="mbar"><div class="mfill" id="d-mfill" style="width:0%"></div></div></div>
-    <div class="rbox red"><div class="rlbl">Incentive Payout</div><div class="rval" id="d-pay">Rs. --</div><div class="rnote" id="d-note">Enter values above</div></div>
-    <div class="mgrid">
-      <div class="mc"><div class="ml">Rate Applied</div><div class="mv red" id="d-rate">--</div></div>
-      <div class="mc"><div class="ml">Achievement %</div><div class="mv" id="d-ach">--</div></div>
-      <div class="mc"><div class="ml">Slab</div><div class="mv" id="d-slab" style="font-size:12px">--</div></div>
-      <div class="mc"><div class="ml">Period</div><div class="mv" id="d-period">Monthly</div></div>
+    <div class="hdr-info">
+      <div class="hdr-brand">Underlinen · FCUK</div>
+      <div class="hdr-title">Friends Connection</div>
+      <div class="hdr-sub">Retailer Scheme Calculator · FY 2025–26</div>
     </div>
-    <div class="cwrap"><div class="ctlbl">Target vs Achieved</div><canvas id="c-distrib" height="160"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="ctitle">Slab Reference</div>
-    <table class="stbl"><thead><tr><th>Achievement</th><th>Rate</th><th>On Target NSV</th></tr></thead>
-    <tbody><tr id="dr-90"><td>90–99%</td><td class="mono" id="dr-90-r">0.5%</td><td class="mono" id="dr-90-x">—</td></tr><tr id="dr-100"><td>100–109%</td><td class="mono" id="dr-100-r">1.0%</td><td class="mono" id="dr-100-x">—</td></tr><tr id="dr-110"><td>110%+</td><td class="mono" id="dr-110-r">1.5%</td><td class="mono" id="dr-110-x">—</td></tr></tbody></table>
   </div>
 </div>
 
-<!-- RETAILER -->
-<div class="sec" id="sec-retailer">
-  <div class="picker"><div class="picker-lbl">👤 Retailer</div><select class="psel" id="sel-r" onchange="applyR()"><option value="">— Upload Excel to select —</option></select><div class="chips" id="chips-r"></div></div>
-  <div class="card">
-    <div class="ctitle">Friends Connection <span class="pill pg">Monthly Slab</span></div>
-    <div class="field"><label>Monthly Purchase Value (Rs.)</label><input type="number" id="r-purchase" value="0" oninput="calcR()"></div>
-    <div class="rbox green"><div class="rlbl">Total Incentive Earned</div><div class="rval" id="r-pay">Rs. --</div><div class="rnote" id="r-note">Enter purchase value</div></div>
-    <div class="mgrid">
-      <div class="mc"><div class="ml">Monthly %</div><div class="mv green" id="r-mpct">--</div></div>
-      <div class="mc"><div class="ml">Qty Bonus %</div><div class="mv blue" id="r-qpct">--</div></div>
-      <div class="mc"><div class="ml">Monthly Amt</div><div class="mv green" id="r-mamt">--</div></div>
-      <div class="mc"><div class="ml">Qty Bonus Amt</div><div class="mv blue" id="r-qamt">--</div></div>
-    </div>
-    <div id="r-trip" style="margin-top:9px;display:none"><span class="badge bda">✈️ Trip Eligible</span><span class="badge bdg">Highest Slab</span></div>
-    <div id="r-next" style="margin-top:9px;font-size:12px;font-weight:700;color:var(--sub)"></div>
-    <div class="cwrap"><div class="ctlbl">Purchase vs Slab Thresholds</div><canvas id="c-retailer" height="200"></canvas></div>
-  </div>
-  <div class="card"><div class="ctitle">Slab Reference</div><table class="stbl"><thead><tr><th>Min Value</th><th>Monthly%</th><th>Qty%</th><th>Total%</th><th>Trip</th></tr></thead><tbody id="r-slab-body"></tbody></table></div>
+<div class="tabs">
+  <button class="tab on" onclick="goTab('calculator',this)">🧮 Calculator</button>
+  <button class="tab" onclick="goTab('scheme',this)">📋 Scheme</button>
+  <button class="tab" onclick="goTab('trips',this)">✈️ Trips</button>
 </div>
 
-<!-- TEAM -->
-<div class="sec" id="sec-team">
-  <div class="picker"><div class="picker-lbl">👤 Sales Rep</div><select class="psel" id="sel-t" onchange="applyT()"><option value="">— Upload Excel to select —</option></select><div class="chips" id="chips-t"></div></div>
+<!-- ═══════════════════════════════
+     CALCULATOR TAB
+═══════════════════════════════ -->
+<div class="sec on" id="sec-calculator">
+
   <div class="card">
-    <div class="ctitle">Volume Incentive <span class="pill pb">Waterfall Slabs</span></div>
-    <div class="field"><label>Target Volume (units) <span class="lock-ico" id="t-lock">🔒</span></label><input type="number" id="t-target" value="5000" oninput="calcT()" readonly></div>
-    <div class="field"><label>Till Date Volume Sold (units)</label><input type="number" id="t-actual" value="0" oninput="calcT()"></div>
-    <div class="mwrap"><div class="mrow"><span class="mlbl">Achievement</span><span class="mpct" id="t-pct">--</span></div><div class="mbar"><div class="mfill" id="t-mfill" style="width:0%"></div></div></div>
-    <div class="rbox blue"><div class="rlbl">Total Incentive Payout</div><div class="rval" id="t-pay">Rs. --</div><div class="rnote" id="t-note">Enter volumes above</div></div>
-    <div class="mgrid">
-      <div class="mc"><div class="ml">Slab</div><div class="mv blue" id="t-slab" style="font-size:12px">--</div></div>
-      <div class="mc"><div class="ml">Achievement</div><div class="mv" id="t-ach">--</div></div>
-      <div class="mc"><div class="ml">Base Rate</div><div class="mv blue" id="t-rate" style="font-size:12px">--</div></div>
-      <div class="mc"><div class="ml">Units Sold</div><div class="mv" id="t-units">--</div></div>
+    <div class="card-title">Select Quarter <span class="badge b-red">FY 2025–26</span></div>
+    <div class="qrow">
+      <button class="qbtn on" onclick="setQ(1,this)">Q1<br><small style="font-size:9px;font-weight:700">Apr–Jun</small></button>
+      <button class="qbtn" onclick="setQ(2,this)">Q2<br><small style="font-size:9px;font-weight:700">Jul–Sep</small></button>
+      <button class="qbtn" onclick="setQ(3,this)">Q3<br><small style="font-size:9px;font-weight:700">Oct–Dec</small></button>
+      <button class="qbtn" onclick="setQ(4,this)">Q4<br><small style="font-size:9px;font-weight:700">Jan–Mar</small></button>
     </div>
-    <div class="dstrip" id="t-detail"></div>
-    <div class="cwrap"><div class="ctlbl">Incentive Band Breakdown</div><canvas id="c-team" height="140"></canvas></div>
+
+    <!-- 3 Month Inputs -->
+    <div class="month-grid">
+      <div class="m-box">
+        <div class="m-lbl" id="lbl-m1">April</div>
+        <input class="m-inp" type="number" id="m1" placeholder="0" oninput="calculate()">
+        <div class="m-slab" id="slab-m1" style="color:#B0A5BF">—</div>
+      </div>
+      <div class="m-box">
+        <div class="m-lbl" id="lbl-m2">May</div>
+        <input class="m-inp" type="number" id="m2" placeholder="0" oninput="calculate()">
+        <div class="m-slab" id="slab-m2" style="color:#B0A5BF">—</div>
+      </div>
+      <div class="m-box">
+        <div class="m-lbl" id="lbl-m3">June</div>
+        <input class="m-inp" type="number" id="m3" placeholder="0" oninput="calculate()">
+        <div class="m-slab" id="slab-m3" style="color:#B0A5BF">—</div>
+      </div>
+    </div>
+
+    <!-- Summary Row -->
+    <div class="sum-row">
+      <div class="sum-box sb-q">
+        <div class="sl">Quarterly Total</div>
+        <div class="sv" id="disp-q">Rs.0</div>
+      </div>
+      <div class="sum-box sb-m">
+        <div class="sl">Monthly Earning</div>
+        <div class="sv" id="disp-m-earn">Rs.0</div>
+      </div>
+      <div class="sum-box sb-t">
+        <div class="sl">Total Payout</div>
+        <div class="sv" id="disp-total">Rs.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIPT -->
+  <div class="receipt" id="receipt">
+    <div class="rh">
+      <span>Description</span><span>Rate</span><span style="text-align:right">Amount</span>
+    </div>
+    <!-- filled by JS -->
+  </div>
+
+  <!-- PROGRESS BARS -->
+  <div class="card">
+    <div class="card-title">Progress Tracker</div>
+    <div class="prog-wrap">
+      <div class="prog-lbl-row">
+        <span class="prog-lbl">Best month → monthly slab</span>
+        <span class="prog-pct" id="pp-m">—</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill pf-red" id="pf-m" style="width:0%"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-lbl-row">
+        <span class="prog-lbl">Quarterly total → quarterly bonus</span>
+        <span class="prog-pct" id="pp-q">—</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill pf-red" id="pf-q" style="width:0%"></div></div>
+    </div>
+    <div class="nudge" id="nudge" style="display:none"></div>
+  </div>
+
+  <!-- TRIP MINI TRACKER -->
+  <div class="card">
+    <div class="card-title">Trip Progress ✈️</div>
+    <div class="trip-pair">
+      <div class="trip-card tc-t">
+        <span class="trip-flag">🇹🇷</span>
+        <div class="trip-name">TURKEY</div>
+        <div class="trip-nights">4 Nights / 5 Days</div>
+        <div class="trip-tgt-lbl">6-Month Target</div>
+        <div class="trip-tgt-val">Rs.9,00,000</div>
+        <div class="trip-bar"><div class="trip-fill" id="tf-turkey" style="width:0%"></div></div>
+        <div class="trip-pct" id="tp-turkey">0% achieved</div>
+        <div class="trip-ok" id="to-turkey" style="display:none">✅ Unlocked!</div>
+      </div>
+      <div class="trip-card tc-s">
+        <span class="trip-flag">🇨🇭</span>
+        <div class="trip-name">SWITZERLAND</div>
+        <div class="trip-nights">5 Nights / 6 Days</div>
+        <div class="trip-tgt-lbl">Annual Target</div>
+        <div class="trip-tgt-val">Rs.18,00,000</div>
+        <div class="trip-bar"><div class="trip-fill" id="tf-swiss" style="width:0%"></div></div>
+        <div class="trip-pct" id="tp-swiss">0% achieved</div>
+        <div class="trip-ok" id="to-swiss" style="display:none">✅ Unlocked!</div>
+      </div>
+    </div>
+    <div class="field"><label>Cumulative 6-Month Purchase (Rs.)</label><input type="number" id="v-6m" value="0" oninput="calcTrips()"></div>
+    <div class="field"><label>Annual Purchase (Rs.)</label><input type="number" id="v-ann" value="0" oninput="calcTrips()"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     SCHEME TAB
+═══════════════════════════════ -->
+<div class="sec" id="sec-scheme">
+  <div class="info-box">
+    ℹ️ Each month earns its own monthly % on that month's purchase value independently.<br>
+    Quarterly bonus = quarterly total × quarterly% of the slab matched by quarterly total.<br>
+    Both are calculated simultaneously and added together.
   </div>
   <div class="card">
-    <div class="ctitle">Key Outlet Enrollment <span class="pill pa">Rs.500 / outlet</span></div>
-    <div class="field"><label>Outlets Enrolled This Month</label><input type="number" id="t-outlets" value="0" oninput="calcOutlet()"></div>
-    <div class="rbox green"><div class="rlbl">Enrollment Incentive</div><div class="rval" id="t-outlet-pay">Rs. --</div><div class="rnote">Rs.500 per enrolled key outlet · monthly</div></div>
+    <div class="card-title">Monthly Slabs <span class="badge b-red">Per Month</span></div>
+    <div style="overflow-x:auto">
+      <table class="stbl">
+        <thead><tr><th>Min Monthly</th><th>Monthly %</th><th>Example Earning</th></tr></thead>
+        <tbody id="m-slab-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Quarterly Bonus Slabs <span class="badge b-blue">On Quarterly Total</span></div>
+    <div style="overflow-x:auto">
+      <table class="stbl">
+        <thead><tr><th>Min Quarterly</th><th>Quarterly %</th><th>Example Earning</th></tr></thead>
+        <tbody id="q-slab-body"></tbody>
+      </table>
+    </div>
+    <div class="info-box" style="margin-top:10px;margin-bottom:0">
+      Quarterly % applies on the full quarterly total when it crosses the threshold.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Trip Eligibility <span class="badge b-amber">Annual Rewards</span></div>
+    <div class="trip-pair">
+      <div class="trip-card tc-t">
+        <span class="trip-flag">🇹🇷</span>
+        <div class="trip-name">TURKEY TRIP</div>
+        <div class="trip-nights">4 Nights / 5 Days</div>
+        <div class="trip-tgt-lbl">6-Month Purchase ≥</div>
+        <div class="trip-tgt-val">Rs.9,00,000</div>
+      </div>
+      <div class="trip-card tc-s">
+        <span class="trip-flag">🇨🇭</span>
+        <div class="trip-name">SWITZERLAND</div>
+        <div class="trip-nights">5 Nights / 6 Days</div>
+        <div class="trip-tgt-lbl">Annual Purchase ≥</div>
+        <div class="trip-tgt-val">Rs.18,00,000</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- LEADERSHIP -->
-<div class="sec" id="sec-leadership">
+<!-- ═══════════════════════════════
+     TRIPS TAB
+═══════════════════════════════ -->
+<div class="sec" id="sec-trips">
   <div class="card">
-    <div class="ctitle">Leadership Incentive <span class="pill pp">Auto Computed</span></div>
-    <div class="shdr">Supervisor Inputs</div>
-    <div class="field"><label>No. of Reps</label><input type="number" id="l-num" value="4" min="1" max="20" oninput="genReps()"></div>
-    <div id="l-reps"></div>
-    <div class="divider"></div>
-    <div class="shdr">Manager Mode</div>
-    <div class="seg"><button class="sbtn active" onclick="setSolo(false,this)">Normal (2+ Supervisors)</button><button class="sbtn" onclick="setSolo(true,this)">Solo Rule (1 Supervisor)</button></div>
-    <div id="l-sup-sec"><div class="field"><label>Supervisor Payouts Rs. (comma separated)</label><input type="text" id="l-sup-pays" value="12000, 8500, 14000" oninput="calcL()"></div></div>
-    <div id="l-solo-sec" style="display:none">
-      <div class="field"><label>Manager Own Payout (Rs.)</label><input type="number" id="l-own" value="10000" oninput="calcL()"></div>
-      <div class="field"><label>Lone Supervisor Payout (Rs.)</label><input type="number" id="l-lone" value="12000" oninput="calcL()"></div>
+    <div class="card-title">🇹🇷 Turkey Trip <span class="badge b-amber">4N / 5D</span></div>
+    <div style="background:linear-gradient(135deg,#FEF8EC,#FEF0D0);border:1.5px solid #F5D78A;border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">6-Month Purchase Target</div>
+      <div style="font-size:32px;font-weight:900;color:#7A4A00;line-height:1;margin-bottom:3px">Rs.9,00,000</div>
+      <div style="font-size:11px;font-weight:600;color:#5A82A0">Cumulative in any 6-month window</div>
     </div>
+    <div class="field"><label>Your 6-Month Purchase (Rs.)</label><input type="number" id="trip-6m" value="0" oninput="calcTripPage()"></div>
+    <div class="prog-wrap">
+      <div class="prog-lbl-row"><span class="prog-lbl">Progress</span><span class="prog-pct" id="tp-6m-pct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-red" id="tp-6m-fill" style="width:0%"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px">
+      <div style="background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;padding:11px">
+        <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;margin-bottom:2px">Achieved</div>
+        <div style="font-size:15px;font-weight:900;color:#7A4A00" id="tp-6m-ach">Rs.0</div>
+      </div>
+      <div style="background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;padding:11px">
+        <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;margin-bottom:2px">Still Needed</div>
+        <div style="font-size:15px;font-weight:900;color:#0D2B5E" id="tp-6m-gap">Rs.9,00,000</div>
+      </div>
+    </div>
+    <div id="tp-6m-status" style="margin-top:10px"></div>
   </div>
-  <div class="card">
-    <div class="ctitle">Payout Chain</div>
-    <div class="chain-row"><div class="cicon ci-r">👤</div><div class="cinfo"><div class="crole">Reps — Average</div><div class="cpay" id="l-rep-avg">Rs. --</div><div class="cbasis">Average of rep payouts above</div></div></div>
-    <div class="chain-row"><div class="cicon ci-s">🤝</div><div class="cinfo"><div class="crole">Supervisor Payout</div><div class="cpay" id="l-sup-pay">Rs. --</div><div class="cbasis">Avg(Reps) × 2</div></div></div>
-    <div class="chain-row"><div class="cicon ci-m">👔</div><div class="cinfo"><div class="crole">Manager Payout</div><div class="cpay" id="l-mgr-pay">Rs. --</div><div class="cbasis" id="l-mgr-basis">Avg(Supervisors) × 2</div></div></div>
-    <div class="cwrap"><div class="ctlbl">Payout Chain</div><canvas id="c-leadership" height="140"></canvas></div>
-  </div>
-</div>
 
-<!-- TRIP -->
-<div class="sec" id="sec-trip">
   <div class="card">
-    <div class="ctitle">Retailer Trip Progress <span class="pill pa">Friends Connection</span></div>
-    <div class="field"><label>Cumulative 6-Month NSV (Rs.)</label><input type="number" id="tr-6m" value="0" oninput="calcTrip()"></div>
-    <div class="field"><label>Annual NSV (Rs.)</label><input type="number" id="tr-annual" value="0" oninput="calcTrip()"></div>
-    <div class="tcard turkey"><div class="temoji">🇹🇷</div><div class="tname">TURKEY TRIP</div><div class="treq" id="turkey-req">6-Month NSV: Rs.9,00,000 · 4N/5D</div><div class="tbar"><div class="tbar-fill" id="tt-bar" style="width:0%"></div></div><div class="tpct" id="tt-pct">0%</div><div id="tt-st" style="margin-top:7px"></div></div>
-    <div class="tcard swiss"><div class="temoji">🇨🇭</div><div class="tname">SWITZERLAND TRIP</div><div class="treq" id="swiss-req">Annual NSV: Rs.18,00,000 · 5N/6D</div><div class="tbar"><div class="tbar-fill" id="ts-bar" style="width:0%"></div></div><div class="tpct" id="ts-pct">0%</div><div id="ts-st" style="margin-top:7px"></div></div>
-    <div class="cwrap"><div class="ctlbl">Achievement vs Target</div><canvas id="c-trip" height="160"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="ctitle">Distributor Trip <span class="pill pb">Monthly NSV</span></div>
-    <div class="field"><label>Distributor Monthly NSV (Rs.)</label><input type="number" id="tr-dist" value="0" oninput="calcDTrip()"></div>
-    <div id="dt-result" style="margin-top:9px"></div>
-    <div class="divider"></div>
-    <div class="irow"><span class="ik">🇨🇭 Switzerland (5N/6D)</span><span class="iv" id="ti-swiss">Rs.18,00,000+</span></div>
-    <div class="irow"><span class="ik">🇹🇷 Turkey (4N/5D)</span><span class="iv" id="ti-turkey">Rs.9,00,000+</span></div>
-    <div class="irow"><span class="ik">Company Cost — Swiss</span><span class="iv">Rs.1,80,000</span></div>
-    <div class="irow"><span class="ik">Company Cost — Turkey</span><span class="iv">Rs.90,000</span></div>
-  </div>
-</div>
-
-<!-- ADMIN SETTINGS -->
-<div class="sec" id="sec-admin-settings">
-  <div class="apanel">
-    <div class="aptitle">⚙️ Distributor Scheme</div>
-    <div class="agrid">
-      <div class="afield"><label>Target NSV (Rs.)</label><input type="number" id="cfg-dt" value="1800000"></div>
-      <div class="afield"><label>Rate @ 90–99%</label><input type="number" step="0.001" id="cfg-dr1" value="0.005"></div>
-      <div class="afield"><label>Rate @ 100–109%</label><input type="number" step="0.001" id="cfg-dr2" value="0.010"></div>
-      <div class="afield"><label>Rate @ 110%+</label><input type="number" step="0.001" id="cfg-dr3" value="0.015"></div>
+    <div class="card-title">🇨🇭 Switzerland Trip <span class="badge b-blue">5N / 6D</span></div>
+    <div style="background:linear-gradient(135deg,#EAF3FB,#D4E8F8);border:1.5px solid #A8C4D8;border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Annual Purchase Target</div>
+      <div style="font-size:32px;font-weight:900;color:#0D2B5E;line-height:1;margin-bottom:3px">Rs.18,00,000</div>
+      <div style="font-size:11px;font-weight:600;color:#5A82A0">Full financial year</div>
     </div>
-  </div>
-  <div class="apanel">
-    <div class="aptitle">⚙️ Team / Rep Volume</div>
-    <div class="agrid">
-      <div class="afield"><label>Target Volume (units)</label><input type="number" id="cfg-tt" value="5000"></div>
-      <div class="afield"><label>Rate @ 90–100% (Rs/unit)</label><input type="number" id="cfg-tr1" value="3"></div>
-      <div class="afield"><label>Rate @ 100–110%</label><input type="number" id="cfg-tr2" value="4"></div>
-      <div class="afield"><label>Rate @ 110–120%</label><input type="number" id="cfg-tr3" value="6"></div>
-      <div class="afield"><label>Rate @ 120–125%</label><input type="number" id="cfg-tr4" value="8"></div>
-      <div class="afield"><label>Rate @ 125%+</label><input type="number" id="cfg-tr5" value="10"></div>
+    <div class="field"><label>Your Annual Purchase (Rs.)</label><input type="number" id="trip-ann" value="0" oninput="calcTripPage()"></div>
+    <div class="prog-wrap">
+      <div class="prog-lbl-row"><span class="prog-lbl">Progress</span><span class="prog-pct" id="tp-ann-pct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-red" id="tp-ann-fill" style="width:0%"></div></div>
     </div>
-  </div>
-  <div class="apanel">
-    <div class="aptitle">⚙️ Trip Targets</div>
-    <div class="agrid">
-      <div class="afield"><label>Turkey 6M NSV</label><input type="number" id="cfg-tturkey" value="900000"></div>
-      <div class="afield"><label>Switzerland Annual NSV</label><input type="number" id="cfg-tswiss" value="1800000"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px">
+      <div style="background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;padding:11px">
+        <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;margin-bottom:2px">Achieved</div>
+        <div style="font-size:15px;font-weight:900;color:#0D2B5E" id="tp-ann-ach">Rs.0</div>
+      </div>
+      <div style="background:#EAF3FB;border:1.5px solid #C5DCF0;border-radius:10px;padding:11px">
+        <div style="font-size:10px;font-weight:800;color:#5A82A0;text-transform:uppercase;margin-bottom:2px">Still Needed</div>
+        <div style="font-size:15px;font-weight:900;color:#0F4C3A" id="tp-ann-gap">Rs.18,00,000</div>
+      </div>
     </div>
+    <div id="tp-ann-status" style="margin-top:10px"></div>
   </div>
-  <div class="apanel">
-    <div class="aptitle">⚙️ Shareable Link</div>
-    <div class="afield"><label>GitHub Pages URL</label><input type="text" id="cfg-url" placeholder="https://your-username.github.io/schemeiq"></div>
-    <div class="anote" style="margin-top:10px">Paste your GitHub Pages URL. The 🔗 Share button copies this link.</div>
-  </div>
-  <div class="apanel">
-    <div class="aptitle">⚙️ Change PIN</div>
-    <div class="agrid">
-      <div class="afield"><label>New PIN (4 digits)</label><input type="number" id="cfg-pin1" placeholder="1234"></div>
-      <div class="afield"><label>Confirm PIN</label><input type="number" id="cfg-pin2" placeholder="1234"></div>
-    </div>
-    <div id="pin-msg" style="margin-top:8px;font-size:12px;font-weight:700;min-height:18px"></div>
-  </div>
-  <div class="apanel">
-    <div class="aptitle">⚙️ Publish Template</div>
-    <div class="anote">Save settings and download an updated HTML. Upload as index.html to GitHub Pages to share with team.</div>
-    <button class="asave" onclick="saveSettings()">💾 Save &amp; Download Updated File</button>
-  </div>
-  <div class="vstamp" id="vstamp">SchemeIQ · Underlinen · v10</div>
 </div>
 
 <script>
-// ── CONFIG ──
-var CFG = {
-  pin: "1234",
-  shareUrl: "https://your-username.github.io/schemeiq",
-  lastUpdated: "",
-  distrib: { target: 1800000, r1: 0.005, r2: 0.010, r3: 0.015 },
-  team: { target: 5000, r1: 3, r2: 4, r3: 6, r4: 8, r5: 10 },
-  trip: { turkey: 900000, swiss: 1800000 },
-  rSlabs: [
-    {min:150000,m:0.11,q:0.07,t:0.18,trip:true},
-    {min:125000,m:0.10,q:0.06,t:0.16,trip:false},
-    {min:100000,m:0.09,q:0.05,t:0.14,trip:false},
-    {min:50000, m:0.08,q:0.04,t:0.12,trip:false},
-    {min:25000, m:0.07,q:0.03,t:0.10,trip:false},
-    {min:10000, m:0.05,q:0.02,t:0.07,trip:false}
-  ]
+// ═══════════════════════════════════════
+// SLABS — monthly thresholds & quarterly thresholds
+// ═══════════════════════════════════════
+var SLABS = [
+  { mMin:  10000, qMin:  30000, mp: 0.05, qp: 0.02 },
+  { mMin:  25000, qMin:  75000, mp: 0.07, qp: 0.03 },
+  { mMin:  50000, qMin: 150000, mp: 0.08, qp: 0.04 },
+  { mMin: 100000, qMin: 300000, mp: 0.09, qp: 0.05 },
+  { mMin: 125000, qMin: 375000, mp: 0.10, qp: 0.06 },
+  { mMin: 150000, qMin: 450000, mp: 0.11, qp: 0.07, trip: true }
+];
+
+var TRIP_TURKEY = 900000;
+var TRIP_SWISS  = 1800000;
+
+var QUARTERS = {
+  1: ['April',   'May',      'June'],
+  2: ['July',    'August',   'September'],
+  3: ['October', 'November', 'December'],
+  4: ['January', 'February', 'March']
 };
 
-// ── EMBEDDED DATA (baked in on save) ──
-var EMBEDDED = {"distrib":[],"retailer":[],"team":[]};
-// ── RUNTIME STATE ──
-var isAdmin = false, soloRule = false, dPeriod = 'monthly', pinBuf = '';
-var excelData = { distrib: [], retailer: [], team: [] };
+var activeQ = 1;
 
-// ── FORMAT ──
-var INF = new Intl.NumberFormat('en-IN');
-function fmt(n) { return 'Rs. ' + INF.format(Math.round(isNaN(n) ? 0 : n)); }
-function fmtN(n) { return INF.format(Math.round(n)); }
-function fmtP(n) { return n.toFixed(1) + '%'; }
-function flashGreen(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add('af');
-  setTimeout(function() { el.classList.remove('af'); }, 2000);
-}
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+var NF = new Intl.NumberFormat('en-IN');
+function rs(n)  { return 'Rs.' + NF.format(Math.round(n || 0)); }
+function pct(n) { return n.toFixed(1) + '%'; }
 
-// ── LOCAL STORAGE ──
-var LS_KEY = 'schemeiq_v10_data';
-function saveToLS() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(excelData)); } catch(e) {}
-}
-function loadFromLS() {
-  // Priority: localStorage > EMBEDDED
-  var src = null;
-  try {
-    var raw = localStorage.getItem(LS_KEY);
-    if (raw) src = JSON.parse(raw);
-  } catch(e) {}
-  if (!src) {
-    if (EMBEDDED.distrib.length || EMBEDDED.retailer.length || EMBEDDED.team.length) src = EMBEDDED;
-  }
-  if (!src) return;
-  excelData = { distrib: src.distrib || [], retailer: src.retailer || [], team: src.team || [] };
-  if (excelData.distrib.length) fillSel('sel-d', excelData.distrib);
-  if (excelData.retailer.length) fillSel('sel-r', excelData.retailer);
-  if (excelData.team.length) fillSel('sel-t', excelData.team);
-  var cnt = excelData.distrib.length + excelData.retailer.length + excelData.team.length;
-  if (cnt > 0) {
-    document.getElementById('up-st').innerHTML =
-      '✓ Data loaded (' + cnt + ' records)' +
-      ' <button class="clr-btn" onclick="clearData()">Clear</button>';
-    document.getElementById('up-st').className = 'up-st ok';
-  }
-}
-function clearData() {
-  try { localStorage.removeItem(LS_KEY); } catch(e) {}
-  excelData = { distrib: [], retailer: [], team: [] };
-  fillSel('sel-d', []); fillSel('sel-r', []); fillSel('sel-t', []);
-  document.getElementById('up-st').textContent = 'Upload to populate name selectors';
-  document.getElementById('up-st').className = 'up-st';
-}
-
-// ── CANVAS CHARTS ──
-function setupCanvas(id) {
-  var c = document.getElementById(id);
-  if (!c) return null;
-  var w = c.parentElement.clientWidth || 300;
-  var h = parseInt(c.getAttribute('height')) || 160;
-  var dpr = window.devicePixelRatio || 1;
-  c.width = w * dpr; c.height = h * dpr;
-  c.style.width = w + 'px'; c.style.height = h + 'px';
-  var ctx = c.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h);
-  return { ctx: ctx, w: w, h: h };
-}
-function rrect(ctx, x, y, w, h, r) {
-  if (w <= 0 || h <= 0) return;
-  r = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
-}
-function drawDonut(id, slices) {
-  var s = setupCanvas(id); if (!s) return;
-  var ctx=s.ctx,W=s.w,H=s.h,cx=W/2,cy=(H-30)/2,r=Math.min(cx,cy)-10,ir=r*0.62;
-  var total=0; for(var i=0;i<slices.length;i++) total+=slices[i].value; if(!total) total=1;
-  var ang=-Math.PI/2;
-  for(var i=0;i<slices.length;i++){var sw=(slices[i].value/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+sw);ctx.closePath();ctx.fillStyle=slices[i].color;ctx.fill();ang+=sw;}
-  ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
-  ctx.font='800 12px system-ui';ctx.fillStyle='#1A1F36';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(fmtP(slices[0].value/total*100),cx,cy);
-  var lx=8,ly=H-16;ctx.font='700 10px system-ui';ctx.textBaseline='middle';
-  for(var i=0;i<slices.length;i++){ctx.fillStyle=slices[i].color;ctx.fillRect(lx,ly-4,10,8);ctx.fillStyle='#6B7A99';ctx.textAlign='left';var txt=slices[i].label;ctx.fillText(txt,lx+13,ly);lx+=ctx.measureText(txt).width+22;if(lx>W-60){lx=8;ly+=16;}}
-}
-function drawHBar(id, bars) {
-  var s = setupCanvas(id); if (!s) return;
-  var ctx=s.ctx,W=s.w,H=s.h,lw=72,pad=8,bh=22,gap=10,bw=W-lw-pad*2-50;
-  ctx.font='700 11px system-ui';
-  for(var i=0;i<bars.length;i++){var b=bars[i],y=pad+i*(bh+gap);ctx.fillStyle='#6B7A99';ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(b.label,lw,y+bh/2);rrect(ctx,lw+pad,y,bw,bh,5);ctx.fillStyle=b.bgColor||'#F4F6FB';ctx.fill();var vw=Math.min(b.value/b.max,1)*bw;if(vw>2){rrect(ctx,lw+pad,y,vw,bh,5);ctx.fillStyle=b.color;ctx.fill();}ctx.fillStyle='#1A1F36';ctx.textAlign='left';ctx.fillText('Rs.'+fmtN(b.value),lw+pad+vw+4,y+bh/2);}
-}
-function drawStacked(id, segs, total) {
-  var s = setupCanvas(id); if (!s) return;
-  var ctx=s.ctx,W=s.w,H=s.h,pad=10,bh=32,bw=W-pad*2;
-  rrect(ctx,pad,pad,bw,bh,6);ctx.fillStyle='#F4F6FB';ctx.fill();
-  var x=pad;
-  for(var i=0;i<segs.length;i++){if(segs[i].value<=0)continue;var sw=(segs[i].value/total)*bw;rrect(ctx,x,pad,sw,bh,0);ctx.fillStyle=segs[i].color;ctx.fill();x+=sw;}
-  rrect(ctx,pad,pad,bw,bh,6);ctx.strokeStyle='#E2E8F4';ctx.lineWidth=1;ctx.stroke();
-  var lx=pad,ly=pad+bh+14;ctx.font='700 10px system-ui';ctx.textBaseline='middle';
-  for(var i=0;i<segs.length;i++){if(segs[i].value<=0)continue;ctx.fillStyle=segs[i].color;ctx.fillRect(lx,ly-4,10,10);ctx.fillStyle='#6B7A99';ctx.textAlign='left';var txt=segs[i].label+' Rs.'+fmtN(segs[i].value);ctx.fillText(txt,lx+13,ly);lx+=ctx.measureText(txt).width+22;if(lx>W-60){lx=pad;ly+=16;}}
-}
-function drawVBar(id, groups) {
-  var s = setupCanvas(id); if (!s) return;
-  var ctx=s.ctx,W=s.w,H=s.h,pL=52,pB=28,pT=10,pR=10,cW=W-pL-pR,cH=H-pB-pT,maxVal=0;
-  for(var i=0;i<groups.length;i++) for(var j=0;j<groups[i].bars.length;j++) if(groups[i].bars[j].value>maxVal) maxVal=groups[i].bars[j].value;
-  if(!maxVal) maxVal=1;
-  var gw=cW/groups.length,bw=Math.min(gw*0.38,30);
-  var ticks=[0,0.25,0.5,0.75,1];
-  for(var ti=0;ti<ticks.length;ti++){var yy=pT+cH-ticks[ti]*cH;ctx.font='700 10px system-ui';ctx.fillStyle='#6B7A99';ctx.textAlign='right';ctx.fillText('Rs.'+fmtN(ticks[ti]*maxVal),pL-4,yy+3);ctx.beginPath();ctx.strokeStyle='#F4F6FB';ctx.lineWidth=1;ctx.moveTo(pL,yy);ctx.lineTo(W-pR,yy);ctx.stroke();}
-  for(var gi=0;gi<groups.length;gi++){var g=groups[gi],cx2=pL+gi*gw+gw/2,offset=-(g.bars.length-1)*(bw+3)/2;for(var bi=0;bi<g.bars.length;bi++){var bx=cx2+offset+bi*(bw+3),bh2=(g.bars[bi].value/maxVal)*cH,by=pT+cH-bh2;rrect(ctx,bx,by,bw,bh2,4);ctx.fillStyle=g.bars[bi].color;ctx.fill();}ctx.font='700 10px system-ui';ctx.fillStyle='#6B7A99';ctx.textAlign='center';ctx.fillText(g.label,cx2,H-8);}
-}
-
-// ── EXCEL UPLOAD ──
-var COL = {
-  distrib:  { code:'Distributor Code', name:'Distributor Name', region:'State / Region',  month:'Month', target:'Target NSV (Rs.)',           actual:'Till Date NSV (Rs.)' },
-  retailer: { code:'Outlet Code',      name:'Retailer Name',    region:'City / District',  month:'Month', target:'Monthly Target (Rs.)',         actual:'Till Date Purchase (Rs.)' },
-  team:     { code:'Emp Code',         name:'Name',             region:'Zone / Region',    month:'Month', target:'Target Volume (Units)',         actual:'Till Date Achievement (Units)' }
-};
-function getCell(row, key) {
-  if (row[key] !== undefined && row[key] !== '') return row[key];
-  var ks = Object.keys(row), kl = key.toLowerCase().substring(0, 5);
-  for (var i = 0; i < ks.length; i++) if (ks[i].toLowerCase().indexOf(kl) > -1) return row[ks[i]];
-  return '';
-}
-function parseRows(rows, type) {
-  var m = COL[type], res = [];
-  for (var i = 0; i < rows.length; i++) {
-    var row = rows[i];
-    var name = String(getCell(row, m.name) || '').trim();
-    if (!name || name === 'undefined') continue;
-    res.push({ code: String(getCell(row, m.code) || '').trim(), name: name, region: String(getCell(row, m.region) || '').trim(), month: String(getCell(row, m.month) || '').trim(), target: parseFloat(getCell(row, m.target)) || 0, actual: parseFloat(getCell(row, m.actual)) || 0 });
-  }
-  return res;
-}
-function fillSel(selId, data) {
-  var sel = document.getElementById(selId);
-  sel.innerHTML = '<option value="">— Choose —</option>';
-  for (var i = 0; i < data.length; i++) {
-    var o = document.createElement('option'); o.value = i;
-    o.textContent = data[i].name + (data[i].region ? ' (' + data[i].region + ')' : '') + (data[i].month ? ' · ' + data[i].month : '');
-    sel.appendChild(o);
-  }
-}
-function handleUpload(input) {
-  var file = input.files[0]; if (!file) return;
-  var st = document.getElementById('up-st');
-  st.textContent = 'Reading ' + file.name + '...'; st.className = 'up-st';
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      var wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array', cellDates: true });
-      var loaded = [];
-      for (var si = 0; si < wb.SheetNames.length; si++) {
-        var sn = wb.SheetNames[si];
-        var nl = sn.toLowerCase().replace(/[^a-z]/g, '');
-        if (nl === 'readme') continue;
-        var rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], { defval: '', raw: true });
-        if (!rows.length) continue;
-        var type = '';
-        if (nl.indexOf('team') > -1 || nl.indexOf('rep') > -1) type = 'team';
-        else if (nl.indexOf('dist') > -1) type = 'distrib';
-        else if (nl.indexOf('retail') > -1) type = 'retailer';
-        if (!type) {
-          var ks = Object.keys(rows[0]);
-          for (var ki = 0; ki < ks.length; ki++) {
-            var kl = ks[ki].toLowerCase();
-            if (kl.indexOf('nsv') > -1) { type = 'distrib'; break; }
-            if (kl.indexOf('unit') > -1) { type = 'team'; break; }
-            if (kl.indexOf('purchase') > -1) { type = 'retailer'; break; }
-          }
-        }
-        if (!type) continue;
-        var parsed = parseRows(rows, type);
-        excelData[type] = parsed;
-        fillSel(type === 'team' ? 'sel-t' : type === 'distrib' ? 'sel-d' : 'sel-r', parsed);
-        loaded.push(type + ' (' + parsed.length + ')');
-      }
-      if (loaded.length) {
-        saveToLS();
-        st.innerHTML = '✓ Loaded: ' + loaded.join(' | ') + ' <button class="clr-btn" onclick="clearData()">Clear</button>';
-        st.className = 'up-st ok';
-      } else {
-        st.textContent = 'No matching sheets found.'; st.className = 'up-st err';
-      }
-    } catch(err) { st.textContent = 'Error: ' + err.message; st.className = 'up-st err'; }
-  };
-  reader.readAsArrayBuffer(file); input.value = '';
-}
-
-function applyD() {
-  var sel = document.getElementById('sel-d');
-  var idx = parseInt(sel.value);
-  if (sel.value === '' || isNaN(idx)) return;
-  var row = excelData.distrib[idx];
-  if (!row) return;
-  var tEl = document.getElementById('d-target');
-  tEl.removeAttribute('readonly');
-  tEl.value = row.target || CFG.distrib.target;
-  if (!isAdmin) tEl.setAttribute('readonly', '');
-  document.getElementById('d-actual').value = row.actual || 0;
-  flashGreen('d-target');
-  flashGreen('d-actual');
-  document.getElementById('chips-d').innerHTML =
-    '<span class="chip cb">' + (row.code || 'N/A') + '</span>' +
-    '<span class="chip cb">' + (row.region || '—') + '</span>' +
-    '<span class="chip ca">Target: Rs.' + fmtN(row.target) + '</span>' +
-    '<span class="chip cg">Actual: Rs.' + fmtN(row.actual) + '</span>';
-  calcD();
-}
-
-function applyR() {
-  var sel = document.getElementById('sel-r');
-  var idx = parseInt(sel.value);
-  if (sel.value === '' || isNaN(idx)) return;
-  var row = excelData.retailer[idx];
-  if (!row) return;
-  document.getElementById('r-purchase').value = row.actual || 0;
-  flashGreen('r-purchase');
-  document.getElementById('chips-r').innerHTML =
-    '<span class="chip cb">' + (row.code || 'N/A') + '</span>' +
-    '<span class="chip cb">' + (row.region || '—') + '</span>' +
-    '<span class="chip cg">Purchase: Rs.' + fmtN(row.actual) + '</span>';
-  calcR();
-}
-
-function applyT() {
-  var sel = document.getElementById('sel-t');
-  var idx = parseInt(sel.value);
-  if (sel.value === '' || isNaN(idx)) return;
-  var row = excelData.team[idx];
-  if (!row) return;
-  var tEl = document.getElementById('t-target');
-  tEl.removeAttribute('readonly');
-  tEl.value = row.target || CFG.team.target;
-  if (!isAdmin) tEl.setAttribute('readonly', '');
-  document.getElementById('t-actual').value = row.actual || 0;
-  flashGreen('t-target');
-  flashGreen('t-actual');
-  document.getElementById('chips-t').innerHTML =
-    '<span class="chip cb">' + (row.code || 'N/A') + '</span>' +
-    '<span class="chip cb">' + (row.region || '—') + '</span>' +
-    '<span class="chip ca">Target: ' + fmtN(row.target) + ' units</span>' +
-    '<span class="chip cg">Actual: ' + fmtN(row.actual) + ' units</span>';
-  calcT();
-}
-
-// ── ADMIN / PIN ──
-function toggleAdmin() { if (isAdmin) { logoutAdmin(); } else { openPin(); } }
-function openPin() { pinBuf = ''; updateDots(); document.getElementById('pin-err').textContent = ''; document.getElementById('pin-modal').classList.remove('hidden'); }
-function closePin() { document.getElementById('pin-modal').classList.add('hidden'); pinBuf = ''; updateDots(); }
-function pinKey(k) { if (pinBuf.length >= 4) return; pinBuf += k; updateDots(); if (pinBuf.length === 4) setTimeout(checkPin, 120); }
-function pinDel() { pinBuf = pinBuf.slice(0, -1); updateDots(); }
-function updateDots() { for (var i = 0; i < 4; i++) { var el = document.getElementById('pd' + i); if (i < pinBuf.length) el.classList.add('filled'); else el.classList.remove('filled'); } }
-function checkPin() {
-  if (pinBuf === CFG.pin) { closePin(); activateAdmin(); }
-  else { document.getElementById('pin-err').textContent = 'Incorrect PIN.'; pinBuf = ''; updateDots(); }
-}
-function activateAdmin() {
-  isAdmin = true;
-  document.getElementById('adminbar').classList.add('show');
-  document.getElementById('upbar').classList.add('show');
-  document.getElementById('admin-tab').style.display = 'flex';
-  document.getElementById('admin-btn').textContent = '🔓 Admin';
-  document.getElementById('d-target').removeAttribute('readonly');
-  document.getElementById('t-target').removeAttribute('readonly');
-  document.getElementById('d-lock').style.display = 'none';
-  document.getElementById('t-lock').style.display = 'none';
-  document.getElementById('tabs').className = 'tabs shift2';
-  syncAdmin();
-}
-function logoutAdmin() {
-  isAdmin = false;
-  document.getElementById('adminbar').classList.remove('show');
-  document.getElementById('upbar').classList.remove('show');
-  document.getElementById('admin-tab').style.display = 'none';
-  document.getElementById('admin-btn').textContent = '⚙ Admin';
-  document.getElementById('d-target').setAttribute('readonly', '');
-  document.getElementById('t-target').setAttribute('readonly', '');
-  document.getElementById('d-lock').style.display = '';
-  document.getElementById('t-lock').style.display = '';
-  document.getElementById('tabs').className = 'tabs shift1';
-  goTab('distrib');
-}
-function syncAdmin() {
-  document.getElementById('cfg-dt').value = CFG.distrib.target;
-  document.getElementById('cfg-dr1').value = CFG.distrib.r1;
-  document.getElementById('cfg-dr2').value = CFG.distrib.r2;
-  document.getElementById('cfg-dr3').value = CFG.distrib.r3;
-  document.getElementById('cfg-tt').value = CFG.team.target;
-  document.getElementById('cfg-tr1').value = CFG.team.r1;
-  document.getElementById('cfg-tr2').value = CFG.team.r2;
-  document.getElementById('cfg-tr3').value = CFG.team.r3;
-  document.getElementById('cfg-tr4').value = CFG.team.r4;
-  document.getElementById('cfg-tr5').value = CFG.team.r5;
-  document.getElementById('cfg-tturkey').value = CFG.trip.turkey;
-  document.getElementById('cfg-tswiss').value = CFG.trip.swiss;
-  document.getElementById('cfg-url').value = CFG.shareUrl || '';
-}
-
-// ── SAVE SETTINGS ──
-function saveSettings() {
-  var p1 = document.getElementById('cfg-pin1').value.trim();
-  var p2 = document.getElementById('cfg-pin2').value.trim();
-  var pm = document.getElementById('pin-msg');
-  if (p1) {
-    if (!/^\d{4}$/.test(p1)) { pm.style.color = 'var(--red)'; pm.textContent = 'PIN must be 4 digits.'; return; }
-    if (p1 !== p2) { pm.style.color = 'var(--red)'; pm.textContent = 'PINs do not match.'; return; }
-    CFG.pin = p1; pm.style.color = 'var(--green)'; pm.textContent = 'PIN updated.';
-  }
-  CFG.distrib.target = parseFloat(document.getElementById('cfg-dt').value) || 1800000;
-  CFG.distrib.r1 = parseFloat(document.getElementById('cfg-dr1').value) || 0.005;
-  CFG.distrib.r2 = parseFloat(document.getElementById('cfg-dr2').value) || 0.010;
-  CFG.distrib.r3 = parseFloat(document.getElementById('cfg-dr3').value) || 0.015;
-  CFG.team.target = parseFloat(document.getElementById('cfg-tt').value) || 5000;
-  CFG.team.r1 = parseFloat(document.getElementById('cfg-tr1').value) || 3;
-  CFG.team.r2 = parseFloat(document.getElementById('cfg-tr2').value) || 4;
-  CFG.team.r3 = parseFloat(document.getElementById('cfg-tr3').value) || 6;
-  CFG.team.r4 = parseFloat(document.getElementById('cfg-tr4').value) || 8;
-  CFG.team.r5 = parseFloat(document.getElementById('cfg-tr5').value) || 10;
-  CFG.trip.turkey = parseFloat(document.getElementById('cfg-tturkey').value) || 900000;
-  CFG.trip.swiss = parseFloat(document.getElementById('cfg-tswiss').value) || 1800000;
-  CFG.shareUrl = document.getElementById('cfg-url').value.trim() || CFG.shareUrl;
-  CFG.lastUpdated = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
-  buildRSlabs(); updateTripUI(); calcD(); calcR(); calcT(); calcTrip(); calcDTrip();
-
-  // ── BUILD CLEAN FILE FROM STATIC TEMPLATE ──
-  // Grab just the static HTML source — not the live DOM
-  var staticHTML = document.getElementById('static-template').textContent;
-  // Inject CFG
-  staticHTML = staticHTML.replace('/*INJECT_CFG*/', 'var CFG = ' + JSON.stringify(CFG, null, 2) + ';');
-  // Inject EMBEDDED data
-  staticHTML = staticHTML.replace('/*INJECT_DATA*/', 'var EMBEDDED = ' + JSON.stringify(excelData) + ';');
-  // Inject stamp
-  staticHTML = staticHTML.replace('SchemeIQ · Underlinen · v10', 'SchemeIQ · Underlinen · Updated ' + CFG.lastUpdated);
-
-  var blob = new Blob([staticHTML], { type: 'text/html;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'SchemeIQ_' + CFG.lastUpdated.replace(/ /g, '_') + '.html';
-  document.body.appendChild(a); a.click();
-  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 1000);
-}
-
-// ── TABS ──
-function goTab(id, btn) {
-  var secs = document.querySelectorAll('.sec');
-  for (var i = 0; i < secs.length; i++) secs[i].classList.remove('active');
-  var tabs = document.querySelectorAll('.tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-  document.getElementById('sec-' + id).classList.add('active');
-  if (btn) { btn.classList.add('active'); }
-  else {
-    var allTabs = document.querySelectorAll('.tab');
-    for (var i = 0; i < allTabs.length; i++) {
-      if (allTabs[i].getAttribute('onclick') && allTabs[i].getAttribute('onclick').indexOf("'" + id + "'") > -1) {
-        allTabs[i].classList.add('active'); break;
-      }
+// Find highest slab where val >= threshold (mMin or qMin)
+function findSlab(val, key) {
+  var result = null;
+  for (var i = 0; i < SLABS.length; i++) {
+    if (val >= SLABS[i][key]) {
+      result = SLABS[i];
+    } else {
+      break; // slabs are ascending, no point checking further
     }
   }
-  setTimeout(function() {
-    if (id === 'distrib') calcD();
-    else if (id === 'retailer') calcR();
-    else if (id === 'team') { calcT(); calcOutlet(); }
-    else if (id === 'leadership') calcL();
-    else if (id === 'trip') { calcTrip(); calcDTrip(); }
-  }, 30);
+  return result;
 }
 
-// ── SHARE ──
-function copyLink() {
-  var url = CFG.shareUrl || window.location.href;
-  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(showToast).catch(function() { fbCopy(url); }); }
-  else { fbCopy(url); }
-}
-function fbCopy(url) { var ta = document.createElement('textarea'); ta.value = url; ta.style.cssText = 'position:fixed;top:-999px'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast(); } catch(e) { alert('Link: ' + url); } document.body.removeChild(ta); }
-function showToast() { var t = document.getElementById('toast'); t.style.display = 'block'; setTimeout(function() { t.style.display = 'none'; }, 2200); }
-
-// ── DISTRIB ──
-function setDP(p, btn) {
-  dPeriod = p;
-  var btns = document.querySelectorAll('#sec-distrib .sbtn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-  btn.classList.add('active');
-  document.getElementById('d-period').textContent = p === 'monthly' ? 'Monthly' : 'Quarterly';
-  calcD();
-}
-function calcD() {
-  var target = parseFloat(document.getElementById('d-target').value) || CFG.distrib.target;
-  var actual = parseFloat(document.getElementById('d-actual').value) || 0;
-  var pct = (actual / target) * 100, rate = 0, slab = 'Below 90%';
-  var ids = ['dr-90','dr-100','dr-110'];
-  for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).classList.remove('hl');
-  if (pct >= 110) { rate = CFG.distrib.r3; slab = '110%+'; document.getElementById('dr-110').classList.add('hl'); }
-  else if (pct >= 100) { rate = CFG.distrib.r2; slab = '100–109%'; document.getElementById('dr-100').classList.add('hl'); }
-  else if (pct >= 90) { rate = CFG.distrib.r1; slab = '90–99%'; document.getElementById('dr-90').classList.add('hl'); }
-  var incentive = actual * rate;
-  var mf = document.getElementById('d-mfill'); mf.style.width = Math.min(pct,130) + '%'; mf.className = 'mfill' + (pct >= 100 ? ' over' : '');
-  document.getElementById('d-pct').textContent = fmtP(pct);
-  document.getElementById('d-pay').textContent = fmt(incentive);
-  document.getElementById('d-rate').textContent = rate > 0 ? (rate*100).toFixed(1) + '%' : '0%';
-  document.getElementById('d-slab').textContent = slab;
-  document.getElementById('d-ach').textContent = fmtP(pct);
-  document.getElementById('d-note').textContent = rate > 0 ? (rate*100).toFixed(1) + '% × Rs.' + fmtN(actual) : 'Min 90% required';
-  document.getElementById('dr-90-r').textContent = (CFG.distrib.r1*100).toFixed(1) + '%';
-  document.getElementById('dr-100-r').textContent = (CFG.distrib.r2*100).toFixed(1) + '%';
-  document.getElementById('dr-110-r').textContent = (CFG.distrib.r3*100).toFixed(1) + '%';
-  document.getElementById('dr-90-x').textContent = 'Rs.' + fmtN(target*CFG.distrib.r1);
-  document.getElementById('dr-100-x').textContent = 'Rs.' + fmtN(target*CFG.distrib.r2);
-  document.getElementById('dr-110-x').textContent = 'Rs.' + fmtN(target*CFG.distrib.r3);
-  var ach=Math.min(actual,target),beyond=Math.max(0,actual-target),gap=Math.max(0,target-actual);
-  drawDonut('c-distrib',[{value:ach,color:'#0FAB6E',label:'Achieved Rs.'+fmtN(ach)},{value:beyond,color:'#1D6FE8',label:'Over Rs.'+fmtN(beyond)},{value:gap,color:'#E2E8F4',label:'Gap Rs.'+fmtN(gap)}]);
+// ═══════════════════════════════════════
+// QUARTER SELECTOR
+// ═══════════════════════════════════════
+function setQ(q, btn) {
+  activeQ = q;
+  var btns = document.querySelectorAll('.qbtn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('on');
+  btn.classList.add('on');
+  var m = QUARTERS[q];
+  document.getElementById('lbl-m1').textContent = m[0];
+  document.getElementById('lbl-m2').textContent = m[1];
+  document.getElementById('lbl-m3').textContent = m[2];
+  calculate();
 }
 
-// ── RETAILER ──
-function buildRSlabs() {
-  var tbody = document.getElementById('r-slab-body'); tbody.innerHTML = '';
-  for (var i = 0; i < CFG.rSlabs.length; i++) {
-    var s = CFG.rSlabs[i], tr = document.createElement('tr'); tr.id = 'rs-' + (i+1);
-    tr.innerHTML = '<td class="mono">Rs.' + fmtN(s.min) + '</td><td class="mono">' + (s.m*100).toFixed(0) + '%</td><td class="mono">' + (s.q*100).toFixed(0) + '%</td><td class="mono">' + (s.t*100).toFixed(0) + '%</td><td>' + (s.trip ? '✈️' : '—') + '</td>';
-    tbody.appendChild(tr);
+// ═══════════════════════════════════════
+// MAIN CALCULATION
+// ═══════════════════════════════════════
+function calculate() {
+  var m1 = parseFloat(document.getElementById('m1').value) || 0;
+  var m2 = parseFloat(document.getElementById('m2').value) || 0;
+  var m3 = parseFloat(document.getElementById('m3').value) || 0;
+  var quarterly = m1 + m2 + m3;
+  var months = QUARTERS[activeQ];
+
+  // ── Step 1: each month earns its own monthly % on its own value ──
+  var s1 = findSlab(m1, 'mMin');
+  var s2 = findSlab(m2, 'mMin');
+  var s3 = findSlab(m3, 'mMin');
+
+  var e1 = s1 && m1 > 0 ? m1 * s1.mp : 0;
+  var e2 = s2 && m2 > 0 ? m2 * s2.mp : 0;
+  var e3 = s3 && m3 > 0 ? m3 * s3.mp : 0;
+  var mTotal = e1 + e2 + e3;
+
+  // ── Step 2: quarterly bonus = quarterly total × quarterly% of matched quarterly slab ──
+  var qs = findSlab(quarterly, 'qMin');
+  var qEarn = qs && quarterly > 0 ? quarterly * qs.qp : 0;
+
+  var grandTotal = mTotal + qEarn;
+
+  // ── Update month slab labels ──
+  function slabLabel(s, v) {
+    if (!s || v <= 0) return '<span style="color:#B0A5BF">—</span>';
+    return '<span style="color:#00C896">' + Math.round(s.mp * 100) + '% slab</span>';
   }
-}
-function calcR() {
-  var val = parseFloat(document.getElementById('r-purchase').value) || 0;
-  for (var i = 1; i <= CFG.rSlabs.length; i++) { var el = document.getElementById('rs-'+i); if (el) el.classList.remove('hl'); }
-  var found = null, fi = -1;
-  for (var j = 0; j < CFG.rSlabs.length; j++) { if (val >= CFG.rSlabs[j].min) { found = CFG.rSlabs[j]; fi = j; break; } }
-  if (!found) { document.getElementById('r-pay').textContent = 'Rs. 0'; document.getElementById('r-note').textContent = 'Below minimum — no incentive'; return; }
-  document.getElementById('r-pay').textContent = fmt(val*found.t);
-  document.getElementById('r-mpct').textContent = (found.m*100).toFixed(0) + '%';
-  document.getElementById('r-qpct').textContent = (found.q*100).toFixed(0) + '%';
-  document.getElementById('r-mamt').textContent = fmt(val*found.m);
-  document.getElementById('r-qamt').textContent = fmt(val*found.q);
-  document.getElementById('r-note').textContent = (found.t*100).toFixed(0) + '% total on Rs.' + fmtN(val);
-  document.getElementById('r-trip').style.display = found.trip ? 'block' : 'none';
-  var hl = document.getElementById('rs-'+(fi+1)); if (hl) hl.classList.add('hl');
-  document.getElementById('r-next').textContent = fi > 0 ? 'Rs.' + fmtN(CFG.rSlabs[fi-1].min - val) + ' more → next slab (' + (CFG.rSlabs[fi-1].t*100).toFixed(0) + '% total)' : 'Highest slab!';
-  var maxV = CFG.rSlabs[0].min * 1.1, bars = [];
-  for (var k = CFG.rSlabs.length-1; k >= 0; k--) { var sl=CFG.rSlabs[k]; bars.push({label:'Rs.'+fmtN(sl.min),value:sl.min,max:maxV,color:val>=sl.min?'#0FAB6E':'#D1D9EC',bgColor:val>=sl.min?'#EDFBF5':'#F4F6FB'}); }
-  bars.push({label:'Your Buy',value:val,max:maxV,color:'#E8294A',bgColor:'#FFF0F3'});
-  drawHBar('c-retailer', bars);
-}
+  document.getElementById('slab-m1').innerHTML = slabLabel(s1, m1);
+  document.getElementById('slab-m2').innerHTML = slabLabel(s2, m2);
+  document.getElementById('slab-m3').innerHTML = slabLabel(s3, m3);
 
-// ── TEAM ──
-function calcT() {
-  var target = parseFloat(document.getElementById('t-target').value) || CFG.team.target;
-  var actual = parseFloat(document.getElementById('t-actual').value) || 0;
-  var pct = (actual/target)*100, r = CFG.team;
-  var bA=0,bB=0,bC=0,bD=0,bE=0,slab='Below 90%';
-  if (pct >= 90) {
-    bA = Math.min(actual,target)*r.r1; slab='90–100%';
-    if (pct > 100) { var cB=Math.min(actual,target*1.10)-target; if(cB>0){bB=cB*r.r2;slab='100–110%';} }
-    if (pct >= 110) { var cC=Math.min(actual,target*1.20)-target*1.10; if(cC>0){bC=cC*r.r3;slab='110–120%';} }
-    if (pct >= 120) { var cD=Math.min(actual,target*1.25)-target*1.20; if(cD>0){bD=cD*r.r4;slab='120–125%';} }
-    if (pct >= 125) { var cE=actual-target*1.25; if(cE>0){bE=cE*r.r5;slab='125%+';} }
+  // ── Summary boxes ──
+  document.getElementById('disp-q').textContent       = rs(quarterly);
+  document.getElementById('disp-m-earn').textContent  = rs(mTotal);
+  document.getElementById('disp-total').textContent   = rs(grandTotal);
+
+  // ── Receipt ──
+  var receipt = document.getElementById('receipt');
+  // remove all rows except header
+  var old = receipt.querySelectorAll('.rr');
+  for (var i = 0; i < old.length; i++) old[i].remove();
+
+  function addRow(label, sub, rateHtml, amtHtml, cls) {
+    var div = document.createElement('div');
+    div.className = 'rr' + (cls ? ' ' + cls : '');
+    div.innerHTML =
+      '<div class="rl">' + label + (sub ? '<small>' + sub + '</small>' : '') + '</div>' +
+      '<div>' + rateHtml + '</div>' +
+      '<div class="amt">' + amtHtml + '</div>';
+    receipt.appendChild(div);
   }
-  var incentive = bA+bB+bC+bD+bE;
-  var mf = document.getElementById('t-mfill'); mf.style.width = Math.min(pct,140)+'%'; mf.className='mfill'+(pct>=100?' over':'');
-  document.getElementById('t-pct').textContent = fmtP(pct);
-  document.getElementById('t-pay').textContent = fmt(incentive);
-  document.getElementById('t-slab').textContent = slab;
-  document.getElementById('t-ach').textContent = fmtP(pct);
-  document.getElementById('t-rate').textContent = pct>=90 ? 'Rs.'+r.r1+'/unit' : '--';
-  document.getElementById('t-units').textContent = pct>=90 ? fmtN(actual)+' units' : '--';
-  var dp = [];
-  if (pct<90) dp.push('Min 90% required. Current: '+fmtP(pct));
-  if (bA>0) dp.push('Rs.'+r.r1+' × '+fmtN(Math.min(actual,target))+' = Rs.'+fmtN(bA));
-  if (bB>0) dp.push('Rs.'+r.r2+' × '+fmtN(Math.round(Math.min(actual,target*1.10)-target))+' = Rs.'+fmtN(bB));
-  if (bC>0) dp.push('Rs.'+r.r3+' × '+fmtN(Math.round(Math.min(actual,target*1.20)-target*1.10))+' = Rs.'+fmtN(bC));
-  if (bD>0) dp.push('Rs.'+r.r4+' × '+fmtN(Math.round(Math.min(actual,target*1.25)-target*1.20))+' = Rs.'+fmtN(bD));
-  if (bE>0) dp.push('Rs.'+r.r5+' × '+fmtN(Math.round(actual-target*1.25))+' = Rs.'+fmtN(bE));
-  if (incentive>0) dp.push('TOTAL = Rs.'+fmtN(incentive));
-  document.getElementById('t-detail').textContent = dp.join('\n+ ');
-  var segs = [];
-  if (bA>0) segs.push({label:'Base 90–100%',value:bA,color:'#0FAB6E'});
-  if (bB>0) segs.push({label:'100–110%',value:bB,color:'#1D6FE8'});
-  if (bC>0) segs.push({label:'110–120%',value:bC,color:'#F59E0B'});
-  if (bD>0) segs.push({label:'120–125%',value:bD,color:'#E8294A'});
-  if (bE>0) segs.push({label:'125%+',value:bE,color:'#7C3AED'});
-  if (segs.length > 0) { drawStacked('c-team', segs, incentive); }
-  else { var cc=document.getElementById('c-team'); if(cc) cc.getContext('2d').clearRect(0,0,cc.width,cc.height); }
-}
-function calcOutlet() { document.getElementById('t-outlet-pay').textContent = fmt((parseInt(document.getElementById('t-outlets').value)||0)*500); }
 
-// ── LEADERSHIP ──
-function genReps() {
-  var n = Math.min(parseInt(document.getElementById('l-num').value)||1, 20);
-  var c = document.getElementById('l-reps'); c.innerHTML = '';
-  for (var i = 1; i <= n; i++) { var d=document.createElement('div'); d.className='field'; d.innerHTML='<label>Rep '+i+' Payout (Rs.)</label><input type="number" class="rep-inp" value="'+(8000+(i-1)*500)+'" oninput="calcL()">'; c.appendChild(d); }
-  calcL();
-}
-function setSolo(val, btn) {
-  soloRule = val;
-  var btns = document.querySelectorAll('#sec-leadership .sbtn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-  btn.classList.add('active');
-  document.getElementById('l-sup-sec').style.display = val ? 'none' : 'block';
-  document.getElementById('l-solo-sec').style.display = val ? 'block' : 'none';
-  calcL();
-}
-function calcL() {
-  var inputs = document.querySelectorAll('.rep-inp'), rv = [], rsum = 0;
-  for (var i = 0; i < inputs.length; i++) { var v=parseFloat(inputs[i].value); if(!isNaN(v)&&v>0) rv.push(v); }
-  for (var i = 0; i < rv.length; i++) rsum += rv[i];
-  var rAvg = rv.length ? rsum/rv.length : 0, sPay = rAvg*2, mPay = 0;
-  if (!soloRule) {
-    var parts = document.getElementById('l-sup-pays').value.split(','), sv = [], ssum = 0;
-    for (var i = 0; i < parts.length; i++) { var pv=parseFloat(parts[i].trim()); if(!isNaN(pv)&&pv>0) sv.push(pv); }
-    for (var i = 0; i < sv.length; i++) ssum += sv[i];
-    mPay = sv.length ? (ssum/sv.length)*2 : 0;
-    document.getElementById('l-mgr-basis').textContent = 'Avg(Supervisors) × 2';
+  // Month rows
+  var mData = [
+    { lbl: months[0], val: m1, earn: e1, slab: s1 },
+    { lbl: months[1], val: m2, earn: e2, slab: s2 },
+    { lbl: months[2], val: m3, earn: e3, slab: s3 }
+  ];
+  for (var i = 0; i < mData.length; i++) {
+    var d = mData[i];
+    var rateStr = d.slab && d.val > 0 ? '<span class="rate rate-g">' + Math.round(d.slab.mp * 100) + '%</span>' : '<span class="rate rate-d">—</span>';
+    var amtStr  = '<span style="color:' + (d.earn > 0 ? '#0F4C3A' : '#7A9BB5') + '">' + rs(d.earn) + '</span>';
+    addRow(d.lbl, d.val > 0 ? rs(d.val) : 'No purchase', rateStr, amtStr, d.val <= 0 ? 'zero' : '');
+  }
+
+  // Monthly subtotal
+  addRow('Monthly Subtotal', null,
+    '<span class="rate rate-d">—</span>',
+    '<span style="color:#00C896;font-weight:900">' + rs(mTotal) + '</span>',
+    'sub');
+
+  // Quarterly bonus
+  if (qs && quarterly > 0) {
+    addRow(
+      'Quarterly Bonus',
+      rs(quarterly) + ' × ' + Math.round(qs.qp * 100) + '%',
+      '<span class="rate rate-b">' + Math.round(qs.qp * 100) + '%</span>',
+      '<span style="color:#6C63FF;font-weight:900">' + rs(qEarn) + '</span>',
+      'qrow-r'
+    );
+  } else if (quarterly > 0) {
+    var firstQ = SLABS[0].qMin;
+    addRow(
+      'Quarterly Bonus',
+      rs(firstQ - quarterly) + ' more needed',
+      '<span class="rate rate-d">—</span>',
+      '<span style="color:#B0A5BF">—</span>',
+      'zero'
+    );
+  }
+
+  // Grand total row
+  addRow('<strong>TOTAL INCENTIVE</strong>', null,
+    '',
+    '<strong>' + rs(grandTotal) + '</strong>',
+    'tot');
+
+  // ── Progress bars ──
+  var bestM = Math.max(m1, m2, m3);
+  var bestS = findSlab(bestM, 'mMin');
+  var nextMIdx = bestS ? SLABS.indexOf(bestS) + 1 : 0;
+  var nextMS = nextMIdx < SLABS.length ? SLABS[nextMIdx] : null;
+
+  if (bestS && nextMS) {
+    var mp = Math.min(((bestM - bestS.mMin) / (nextMS.mMin - bestS.mMin)) * 100, 100);
+    document.getElementById('pf-m').style.width = mp + '%';
+    document.getElementById('pf-m').className = 'prog-fill ' + (mp >= 100 ? 'pf-green' : 'pf-red');
+    document.getElementById('pp-m').textContent = pct(mp) + ' to next';
+  } else if (bestS) {
+    document.getElementById('pf-m').style.width = '100%';
+    document.getElementById('pf-m').className = 'prog-fill pf-green';
+    document.getElementById('pp-m').textContent = 'Highest slab!';
   } else {
-    var own=parseFloat(document.getElementById('l-own').value)||0, lone=parseFloat(document.getElementById('l-lone').value)||0;
-    mPay = ((own+lone)/2)*2;
-    document.getElementById('l-mgr-basis').textContent = 'Avg(Own+Lone) × 2 [Solo]';
+    var fp = SLABS[0].mMin;
+    document.getElementById('pf-m').style.width = Math.min((bestM / fp) * 100, 100) + '%';
+    document.getElementById('pf-m').className = 'prog-fill pf-red';
+    document.getElementById('pp-m').textContent = bestM > 0 ? pct((bestM / fp) * 100) + ' to first slab' : '—';
   }
-  document.getElementById('l-rep-avg').textContent = fmt(rAvg);
-  document.getElementById('l-sup-pay').textContent = fmt(sPay);
-  document.getElementById('l-mgr-pay').textContent = fmt(mPay);
-  drawVBar('c-leadership',[{label:'Reps Avg',bars:[{value:rAvg,color:'#E8294A'}]},{label:'Supervisor',bars:[{value:sPay,color:'#1D6FE8'}]},{label:'Manager',bars:[{value:mPay,color:'#0FAB6E'}]}]);
+
+  var nextQIdx = qs ? SLABS.indexOf(qs) + 1 : 0;
+  var nextQS = nextQIdx < SLABS.length ? SLABS[nextQIdx] : null;
+
+  if (qs && nextQS) {
+    var qp2 = Math.min(((quarterly - qs.qMin) / (nextQS.qMin - qs.qMin)) * 100, 100);
+    document.getElementById('pf-q').style.width = qp2 + '%';
+    document.getElementById('pf-q').className = 'prog-fill ' + (qp2 >= 100 ? 'pf-green' : 'pf-red');
+    document.getElementById('pp-q').textContent = pct(qp2) + ' to next Q slab';
+  } else if (qs) {
+    document.getElementById('pf-q').style.width = '100%';
+    document.getElementById('pf-q').className = 'prog-fill pf-green';
+    document.getElementById('pp-q').textContent = 'Highest Q slab!';
+  } else {
+    var fq = SLABS[0].qMin;
+    document.getElementById('pf-q').style.width = quarterly > 0 ? Math.min((quarterly / fq) * 100, 100) + '%' : '0%';
+    document.getElementById('pf-q').className = 'prog-fill pf-red';
+    document.getElementById('pp-q').textContent = quarterly > 0 ? pct((quarterly / fq) * 100) + ' to first Q slab' : '—';
+  }
+
+  // ── Nudge ──
+  var nudge = document.getElementById('nudge');
+  var parts = [];
+  if (nextMS && bestS) parts.push('<strong>' + rs(nextMS.mMin - bestM) + ' more monthly</strong> → ' + Math.round(nextMS.mp * 100) + '% slab');
+  if (nextQS && qs)   parts.push('<strong>' + rs(nextQS.qMin - quarterly) + ' more quarterly</strong> → ' + Math.round(nextQS.qp * 100) + '% Q bonus');
+  if (!bestS && bestM > 0) parts.push('<strong>' + rs(SLABS[0].mMin - bestM) + ' more</strong> to first monthly slab');
+  if (!qs && quarterly > 0 && quarterly < SLABS[0].qMin) parts.push('<strong>' + rs(SLABS[0].qMin - quarterly) + ' more quarterly</strong> to trigger Q bonus');
+  if (parts.length) { nudge.style.display = 'block'; nudge.innerHTML = '💡 ' + parts.join(' &nbsp;·&nbsp; '); }
+  else nudge.style.display = 'none';
+
+  // ── Mini trip tracker (uses 6m and annual inputs) ──
+  calcTrips();
 }
 
-// ── TRIP ──
-function updateTripUI() {
-  document.getElementById('turkey-req').textContent = '6-Month NSV: Rs.' + fmtN(CFG.trip.turkey) + ' · 4N/5D';
-  document.getElementById('swiss-req').textContent = 'Annual NSV: Rs.' + fmtN(CFG.trip.swiss) + ' · 5N/6D';
-  document.getElementById('ti-turkey').textContent = 'Rs.' + fmtN(CFG.trip.turkey) + '+';
-  document.getElementById('ti-swiss').textContent = 'Rs.' + fmtN(CFG.trip.swiss) + '+';
-}
-function calcTrip() {
-  var sixM=parseFloat(document.getElementById('tr-6m').value)||0, annual=parseFloat(document.getElementById('tr-annual').value)||0;
-  var tT=CFG.trip.turkey,sT=CFG.trip.swiss,tP=Math.min((sixM/tT)*100,100),sP=Math.min((annual/sT)*100,100);
-  document.getElementById('tt-bar').style.width=tP+'%'; document.getElementById('ts-bar').style.width=sP+'%';
-  document.getElementById('tt-pct').textContent=tP.toFixed(1)+'% achieved'; document.getElementById('ts-pct').textContent=sP.toFixed(1)+'% achieved';
-  document.getElementById('tt-st').innerHTML=sixM>=tT?'<span class="badge bda">Turkey Trip Unlocked! ✈️</span>':'<span class="badge bdr">Rs.'+fmtN(tT-sixM)+' more needed</span>';
-  document.getElementById('ts-st').innerHTML=annual>=sT?'<span class="badge bdb">Switzerland Trip Unlocked! ✈️</span>':'<span class="badge bdr">Rs.'+fmtN(sT-annual)+' more needed</span>';
-  drawVBar('c-trip',[{label:'🇹🇷 Turkey',bars:[{value:Math.min(sixM,tT),color:'#F59E0B'},{value:tT,color:'#FDE68A'}]},{label:'🇨🇭 Swiss',bars:[{value:Math.min(annual,sT),color:'#1D6FE8'},{value:sT,color:'#C0D8FF'}]}]);
-}
-function calcDTrip() {
-  var nsv=parseFloat(document.getElementById('tr-dist').value)||0, el=document.getElementById('dt-result');
-  if(nsv>=CFG.trip.swiss) el.innerHTML='<span class="badge bdb">🇨🇭 Switzerland Trip (5N/6D)</span><span class="badge bdg">Above Rs.'+fmtN(CFG.trip.swiss)+'</span>';
-  else if(nsv>=CFG.trip.turkey) el.innerHTML='<span class="badge bda">🇹🇷 Turkey Trip (4N/5D)</span><div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--sub)">Rs.'+fmtN(CFG.trip.swiss-nsv)+' more for Switzerland</div>';
-  else el.innerHTML='<span class="badge bdr">No Trip Yet</span><div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--sub)">Rs.'+fmtN(CFG.trip.turkey-nsv)+' more for Turkey Trip</div>';
+// ═══════════════════════════════════════
+// TRIPS
+// ═══════════════════════════════════════
+function calcTrips() {
+  var sixM = parseFloat(document.getElementById('v-6m').value) || 0;
+  var ann  = parseFloat(document.getElementById('v-ann').value) || 0;
+  var tP = Math.min((sixM / TRIP_TURKEY) * 100, 100);
+  var sP = Math.min((ann  / TRIP_SWISS)  * 100, 100);
+  document.getElementById('tf-turkey').style.width = tP + '%';
+  document.getElementById('tp-turkey').textContent = tP.toFixed(1) + '% achieved';
+  document.getElementById('to-turkey').style.display = sixM >= TRIP_TURKEY ? 'block' : 'none';
+  document.getElementById('tf-swiss').style.width = sP + '%';
+  document.getElementById('tp-swiss').textContent = sP.toFixed(1) + '% achieved';
+  document.getElementById('to-swiss').style.display = ann >= TRIP_SWISS ? 'block' : 'none';
 }
 
-// ── INIT ──
-window.addEventListener('load', function() {
-  buildRSlabs(); updateTripUI(); genReps();
-  loadFromLS();
-  calcD(); calcR(); calcT(); calcOutlet(); calcL(); calcTrip(); calcDTrip();
-  if (CFG.lastUpdated) document.getElementById('vstamp').textContent = 'SchemeIQ · Underlinen · Updated ' + CFG.lastUpdated;
-});
+function calcTripPage() {
+  var sixM = parseFloat(document.getElementById('trip-6m').value) || 0;
+  var ann  = parseFloat(document.getElementById('trip-ann').value) || 0;
+  var tP = Math.min((sixM / TRIP_TURKEY) * 100, 100);
+  var sP = Math.min((ann  / TRIP_SWISS)  * 100, 100);
+
+  document.getElementById('tp-6m-pct').textContent  = tP.toFixed(1) + '%';
+  document.getElementById('tp-6m-fill').style.width = tP + '%';
+  document.getElementById('tp-6m-fill').className   = 'prog-fill ' + (sixM >= TRIP_TURKEY ? 'pf-green' : 'pf-red');
+  document.getElementById('tp-6m-ach').textContent  = rs(sixM);
+  document.getElementById('tp-6m-gap').textContent  = sixM >= TRIP_TURKEY ? 'Achieved! ✅' : rs(TRIP_TURKEY - sixM);
+  document.getElementById('tp-6m-status').innerHTML = sixM >= TRIP_TURKEY
+    ? '<span style="font-size:14px;font-weight:800;color:#0F4C3A">🎉 Turkey Trip Unlocked!</span>'
+    : '<span style="font-size:12px;font-weight:700;color:#5A82A0">' + rs(TRIP_TURKEY - sixM) + ' more to qualify</span>';
+
+  document.getElementById('tp-ann-pct').textContent  = sP.toFixed(1) + '%';
+  document.getElementById('tp-ann-fill').style.width = sP + '%';
+  document.getElementById('tp-ann-fill').className   = 'prog-fill ' + (ann >= TRIP_SWISS ? 'pf-green' : 'pf-red');
+  document.getElementById('tp-ann-ach').textContent  = rs(ann);
+  document.getElementById('tp-ann-gap').textContent  = ann >= TRIP_SWISS ? 'Achieved! ✅' : rs(TRIP_SWISS - ann);
+  document.getElementById('tp-ann-status').innerHTML = ann >= TRIP_SWISS
+    ? '<span style="font-size:14px;font-weight:800;color:#0F4C3A">🎉 Switzerland Trip Unlocked!</span>'
+    : '<span style="font-size:12px;font-weight:700;color:#5A82A0">' + rs(TRIP_SWISS - ann) + ' more to qualify</span>';
+}
+
+// ═══════════════════════════════════════
+// SCHEME TABLES
+// ═══════════════════════════════════════
+function buildSchemeTables() {
+  var mb = document.getElementById('m-slab-body');
+  var qb = document.getElementById('q-slab-body');
+  mb.innerHTML = ''; qb.innerHTML = '';
+  for (var i = 0; i < SLABS.length; i++) {
+    var s = SLABS[i];
+    var mtr = document.createElement('tr');
+    mtr.innerHTML = '<td>' + rs(s.mMin) + '</td><td style="color:#00C896;font-weight:800">' + Math.round(s.mp*100) + '%</td><td>' + rs(s.mMin * s.mp) + '</td>';
+    mb.appendChild(mtr);
+    var qtr = document.createElement('tr');
+    qtr.innerHTML = '<td>' + rs(s.qMin) + '</td><td style="color:#6C63FF;font-weight:800">' + Math.round(s.qp*100) + '%' + (s.trip ? ' ✈️' : '') + '</td><td>' + rs(s.qMin * s.qp) + '</td>';
+    qb.appendChild(qtr);
+  }
+}
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function goTab(id, btn) {
+  document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(function(b) { b.classList.remove('on'); });
+  document.getElementById('sec-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+buildSchemeTables();
+calculate();
 </script>
-
 </body>
 </html>
